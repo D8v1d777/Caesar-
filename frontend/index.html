@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar - Data-Grounded Presentation Generator</title>
+    <style>
+        :root {
+            --ink-navy: #12141C;
+            --card-surface: #1B1F2A;
+            --imperial-gold: #C9A24B;
+            --tyrian-purple: #6B4E8E;
+            --slate-blue: #4C6B8A;
+            --off-white: #ECE7DC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--ink-navy);
+            color: var(--off-white);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 350px;
+            background-color: var(--card-surface);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        h1 {
+            color: var(--imperial-gold);
+            font-family: 'Georgia', serif;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: var(--tyrian-purple);
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+
+        .input-section {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--off-white);
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: var(--off-white);
+            font-family: 'Consolas', 'Courier New', monospace;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--imperial-gold);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 16px;
+            background-color: var(--imperial-gold);
+            color: var(--ink-navy);
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #d4b46e;
+        }
+
+        button:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        #audio-button {
+            background-color: var(--tyrian-purple);
+            color: white;
+        }
+
+        #audio-button:hover {
+            background-color: #8a6aae;
+        }
+
+        #audio-button.recording {
+            background-color: #d32f2f;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+        }
+
+        .status-indicator {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            min-height: 20px;
+        }
+
+        .status-idle {
+            background-color: rgba(108, 78, 142, 0.2);
+            border-left: 3px solid var(--tyrian-purple);
+        }
+
+        .status-processing {
+            background-color: rgba(201, 162, 75, 0.2);
+            border-left: 3px solid var(--imperial-gold);
+        }
+
+        .status-error {
+            background-color: rgba(211, 47, 47, 0.2);
+            border-left: 3px solid #d32f2f;
+        }
+
+        .status-success {
+            background-color: rgba(76, 107, 138, 0.2);
+            border-left: 3px solid var(--slate-blue);
+        }
+
+        #preview-container {
+            flex: 1;
+            background-color: var(--ink-navy);
+            overflow: hidden;
+            position: relative;
+        }
+
+        #preview-frame {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .loading-spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid var(--imperial-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #download-button {
+            margin-top: 20px;
+            padding: 12px 24px;
+            background-color: var(--slate-blue);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #download-button:hover {
+            background-color: #5a85ab;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <header>
+                <h1>Caesar</h1>
+                <div class="tagline">Data-Grounded Presentations</div>
+            </header>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="text-input">Enter your request:</label>
+                    <textarea id="text-input" placeholder="e.g., show me Q3 revenue"></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button id="text-button">Generate from Text</button>
+                    <button id="audio-button">Record Audio</button>
+                </div>
+
+                <div class="status-indicator status-idle" id="status-indicator">
+                    Ready
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div id="preview-container">
+                <iframe id="preview-frame" src="about:blank"></iframe>
+                <div class="loading-spinner hidden" id="loading-spinner"></div>
+            </div>
+            <button id="download-button" class="hidden">Download Presentation</button>
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const textInput = document.getElementById('text-input');
+        const textButton = document.getElementById('text-button');
+        const audioButton = document.getElementById('audio-button');
+        const statusIndicator = document.getElementById('status-indicator');
+        const previewFrame = document.getElementById('preview-frame');
+        const loadingSpinner = document.getElementById('loading-spinner');
+        const downloadButton = document.getElementById('download-button');
+
+        // State
+        let isRecording = false;
+        let mediaRecorder = null;
+        let audioChunks = [];
+
+        // Set status function
+        function setStatus(message, type = 'idle') {
+            statusIndicator.textContent = message;
+            statusIndicator.className = `status-indicator status-${type}`;
+        }
+
+        // Set button loading state
+        function setButtonState(textEnabled = true, audioEnabled = true) {
+            textButton.disabled = !textEnabled;
+            audioButton.disabled = !audioEnabled;
+        }
+
+        // Handle text button click
+        textButton.addEventListener('click', async () => {
+            const text = textInput.value.trim();
+            if (!text) {
+                setStatus('Please enter some text', 'error');
+                return;
+            }
+
+            await generateSlide(text);
+        });
+
+        // Handle audio button click
+        audioButton.addEventListener('click', async () => {
+            if (!isRecording) {
+                // Start recording
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    mediaRecorder = new MediaRecorder(stream);
+                    audioChunks = [];
+
+                    mediaRecorder.addEventListener("dataavailable", event => {
+                        audioChunks.push(event.data);
+                    });
+
+                    mediaRecorder.addEventListener("stop", () => {
+                        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                        const audioFile = new File([audioBlob], 'recording.wav', { type: 'audio/wav' });
+
+                        // Create a FormData object to send the file
+                        const formData = new FormData();
+                        formData.append('audio', audioFile);
+
+                        // Send the audio file to the server
+                        fetch('/generate', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            displaySlide(data);
+                        })
+                        .catch(error => {
+                            setStatus(`Error: ${error.message}`, 'error');
+                        })
+                        .finally(() => {
+                            setButtonState(true, true);
+                            setStatus('Ready', 'idle');
+                        });
+                    });
+
+                    mediaRecorder.start();
+                    isRecording = true;
+                    audioButton.textContent = 'Stop Recording';
+                    audioButton.classList.add('recording');
+                    setStatus('Recording...', 'processing');
+                    setButtonState(false, true);
+                } catch (error) {
+                    setStatus(`Error accessing microphone: ${error.message}`, 'error');
+                    setButtonState(true, true);
+                }
+            } else {
+                // Stop recording
+                mediaRecorder.stop();
+                isRecording = false;
+                audioButton.textContent = 'Record Audio';
+                audioButton.classList.remove('recording');
+                setStatus('Processing audio...', 'processing');
+            }
+        });
+
+        // Function to generate slide from text
+        async function generateSlide(text) {
+            setStatus('Generating your presentation...', 'processing');
+            setButtonState(false, false);
+            showLoadingSpinner();
+
+            try {
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({ 'text': text })
+                });
+
+                const data = await response.json();
+                displaySlide(data);
+            } catch (error) {
+                setStatus(`Error: ${error.message}`, 'error');
+            } finally {
+                setButtonState(true, true);
+                hideLoadingSpinner();
+            }
+        }
+
+        // Function to display the slide in the iframe
+        function displaySlide(data) {
+            // Determine if data is grounded
+            const isGrounded = data.grounded || false;
+
+            // Create an HTML string to display in the iframe
+            const htmlContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>${data.spec.title}</title>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 20px;
+                            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                            background-color: #f8f9fa;
+                        }
+                        .slide-container {
+                            max-width: 800px;
+                            margin: 0 auto;
+                            background: white;
+                            padding: 30px;
+                            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                            position: relative;
+                        }
+                        .slide-title {
+                            color: #2c3e50;
+                            text-align: center;
+                            margin-bottom: 20px;
+                        }
+                        .slide-content {
+                            margin: 20px 0;
+                            min-height: 200px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                        }
+                        .grounding-indicator {
+                            position: absolute;
+                            bottom: 20px;
+                            right: 20px;
+                            font-size: 0.9em;
+                            display: flex;
+                            align-items: center;
+                            gap: 8px;
+                        }
+                        .grounding-dot {
+                            width: 8px;
+                            height: 8px;
+                            border-radius: 50%;
+                            display: inline-block;
+                        }
+                        .grounding-dot.green {
+                            background-color: #4ADE80;
+                            animation: pulse-green 2s ease-in-out infinite;
+                        }
+                        .grounding-dot.red {
+                            background-color: #EF4444;
+                            animation: pulse-red 2s ease-in-out infinite;
+                        }
+                        @keyframes pulse-green {
+                            0%, 100% { opacity: 1; }
+                            50% { opacity: 0.5; }
+                        }
+                        @keyframes pulse-red {
+                            0%, 100% { opacity: 1; }
+                            50% { opacity: 0.5; }
+                        }
+                        .grounding-text {
+                            font-style: italic;
+                        }
+                        .grounding-text.available {
+                            color: #4ADE80;
+                        }
+                        .grounding-text.unavailable {
+                            color: #EF4444;
+                        }
+                        /* Grounding pulse animation for the card */
+                        .grounded-card {
+                            position: relative;
+                            border-radius: 8px;
+                            overflow: hidden;
+                            margin: 20px 0;
+                            padding: 20px;
+                            background: white;
+                            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                        }
+                        .grounded-card::before {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            bottom: 0;
+                            border-radius: 8px;
+                            padding: 2px;
+                            background: linear-gradient(90deg, #C9A96E, #F0E6D2, #C9A96E, #F0E6D2, #C9A96E);
+                            background-size: 300% 100%;
+                            -webkit-mask:
+                                linear-gradient(#fff 0 0) content-box,
+                                linear-gradient(#fff 0 0);
+                            mask:
+                                linear-gradient(#fff 0 0) content-box,
+                                linear-gradient(#fff 0 0);
+                            -webkit-mask-composite: xor;
+                            mask-composite: exclude;
+                            animation: grounding-travel 1.5s ease-in-out;
+                        }
+                        @keyframes grounding-travel {
+                            0% { background-position: 100% 0; }
+                            100% { background-position: 0% 0; }
+                        }
+                        .ungrounded-card {
+                            border: 2px solid #EF4444;
+                            border-radius: 8px;
+                            margin: 20px 0;
+                            padding: 20px;
+                            background: white;
+                            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+                            animation: pulse-red-border 2s ease-in-out infinite;
+                        }
+                        @keyframes pulse-red-border {
+                            0%, 100% { border-color: #EF4444; }
+                            50% { border-color: #FF6B6B; }
+                        }
+                        .source-label {
+                            margin-top: 20px;
+                            padding-top: 10px;
+                            border-top: 1px solid #eee;
+                            font-size: 0.9em;
+                            color: #7f8c8d;
+                            text-align: right;
+                        }
+                        .notes {
+                            margin-top: 30px;
+                            padding-top: 15px;
+                            border-top: 1px dashed #bdc3c7;
+                            font-style: italic;
+                            color: #95a5a6;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="slide-container">
+                        <h1 class="slide-title">${data.spec.title}</h1>
+                        <div class="${isGrounded ? 'grounded-card' : 'ungrounded-card'}">
+                            <div class="slide-content">
+                                ${displaySlideContent(data.spec)}
+                            </div>
+                        </div>
+                        <div class="grounding-indicator">
+                            <div class="grounding-dot ${isGrounded ? 'green' : 'red'}"></div>
+                            <div class="grounding-text ${isGrounded ? 'available' : 'unavailable'}">
+                                ${isGrounded ? '✓ Grounded in database' : '[DATA UNAVAILABLE — CHECK DATABASE]'}
+                            </div>
+                        </div>
+                        <div class="source-label">Source: ${data.spec.source_label}</div>
+                        ${data.spec.notes ? `<div class="notes">Notes: ${data.spec.notes}</div>` : ''}
+                    </div>
+                </body>
+                </html>
+            `;
+
+            // Set the iframe content
+            previewFrame.srcdoc = htmlContent;
+
+            // Show download button
+            downloadButton.classList.remove('hidden');
+            downloadButton.onclick = () => {
+                // Use the API download endpoint
+                const filename = data.filename || data.file_path.split('/').pop().split('\\').pop();
+                const downloadUrl = `/download/${filename}`;
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            // Update status
+            setStatus('Presentation generated successfully!', 'success');
+        }
+
+        // Helper function to display slide content based on chart type
+        function displaySlideContent(spec) {
+            switch (spec.chart_type) {
+                case 'text':
+                    return `<p>${spec.data.content || ''}</p>`;
+                case 'table':
+                    if (!spec.data.headers || !spec.data.rows || spec.data.headers.length === 0 || spec.data.rows.length === 0) {
+                        return '<p>No data available</p>';
+                    }
+                    let tableHtml = '<table style="width: 100%; border-collapse: collapse;">';
+                    // Header
+                    tableHtml += '<thead><tr>';
+                    spec.data.headers.forEach(header => {
+                        tableHtml += `<th style="border: 1px solid #ddd; padding: 8px; background-color: #f2f2f2; text-align: left;">${header}</th>`;
+                    });
+                    tableHtml += '</tr></thead>';
+                    // Body
+                    tableHtml += '<tbody>';
+                    spec.data.rows.forEach(row => {
+                        tableHtml += '<tr>';
+                        row.forEach(cell => {
+                            tableHtml += `<td style="border: 1px solid #ddd; padding: 8px;">${cell}</td>`;
+                        });
+                        tableHtml += '</tr>';
+                    });
+                    tableHtml += '</tbody></table>';
+                    return tableHtml;
+                case 'bar':
+                case 'line':
+                case 'pie':
+                    // For chart types, we'd ideally render the actual chart, but for simplicity
+                    // we'll show a placeholder since we can't easily render charts in iframe without JS
+                    return `<div style="text-align: center; padding: 40px;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📊</div>
+                        <p>${spec.chart_type.charAt(0).toUpperCase() + spec.chart_type.slice(1)} chart displaying ${spec.data.labels?.length || 0} data points</p>
+                    </div>`;
+                default:
+                    return `<p>Unsupported chart type: ${spec.chart_type}</p>`;
+            }
+        }
+
+        // Show/hide loading spinner
+        function showLoadingSpinner() {
+            loadingSpinner.classList.remove('hidden');
+        }
+
+        function hideLoadingSpinner() {
+            loadingSpinner.classList.add('hidden');
+        }
+
+        // Initialize
+        setStatus('Ready', 'idle');
+        setButtonState(true, true);
+    </script>
+</body>
+</html>
