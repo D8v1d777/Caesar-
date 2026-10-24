@@ -20,8 +20,9 @@ This is a proposed sequence, not a claim of completed work. Work should advance 
 **Exit gate:** Polished, navigable prototype with all required UI states and no company data dependency.
 
 ## Phase 2 — Hybrid voice and approval loop
-- [x] Define and test the frontend voice-session transition contract (state logic only; no capture/runtime yet).
-- Local speech-to-text spike and microphone permissions.
+- [x] Define and test the frontend voice-session transition contract.
+- [x] Add an optional loopback browser capture and verified local whisper.cpp process adapter (runtime disabled unless explicitly configured; Windows hardware validation remains open).
+- Local speech-to-text quality/latency spike and packaged Windows microphone permissions.
 - Session state machine and persistent listening indicator.
 - Typed action proposals, preview, approval, rejection, cancellation, undo.
 - No automatic display changes from contextual listening.
