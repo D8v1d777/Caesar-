@@ -20,6 +20,7 @@ This is a proposed sequence, not a claim of completed work. Work should advance 
 **Exit gate:** Polished, navigable prototype with all required UI states and no company data dependency.
 
 ## Phase 2 — Hybrid voice and approval loop
+- [x] Define and test the frontend voice-session transition contract (state logic only; no capture/runtime yet).
 - Local speech-to-text spike and microphone permissions.
 - Session state machine and persistent listening indicator.
 - Typed action proposals, preview, approval, rejection, cancellation, undo.
