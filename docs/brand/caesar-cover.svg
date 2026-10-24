@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="440" viewBox="0 0 1440 440" role="img" aria-labelledby="title desc">
+  <title id="title">Caesar — Speak. Shape. Present.</title>
+  <desc id="desc">An original Roman-inspired editorial banner in deep charcoal, antique brass, warm ivory and oxblood, with a classical arch and column motif.</desc>
+  <defs>
+    <linearGradient id="stone" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#191714"/>
+      <stop offset="1" stop-color="#100f0d"/>
+    </linearGradient>
+    <pattern id="rules" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path d="M48 0H0V48" fill="none" stroke="#d4b77b" stroke-opacity=".035" stroke-width="1"/>
+    </pattern>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e1c991"/>
+      <stop offset="1" stop-color="#a78650"/>
+    </linearGradient>
+  </defs>
+  <rect width="1440" height="440" fill="url(#stone)"/>
+  <rect width="1440" height="440" fill="url(#rules)"/>
+  <rect x="54" y="46" width="1332" height="348" rx="2" fill="none" stroke="#e0cfaa" stroke-opacity=".14"/>
+  <path d="M54 92H78M54 348H78M1362 92H1386M1362 348H1386" stroke="#8b4547" stroke-width="3"/>
+  <path d="M112 100V340" stroke="url(#gold)" stroke-width="1.5"/>
+  <circle cx="112" cy="72" r="17" fill="none" stroke="#c9aa70" stroke-width="1"/>
+  <path d="M104 78c-4-7-1-14 5-18m-1 23c-3-6-1-11 3-15m13 10c4-7 1-14-5-18m1 23c3-6 1-11-3-15" fill="none" stroke="#c9aa70" stroke-width="1.15" stroke-linecap="round"/>
+  <text x="112" y="76" text-anchor="middle" font-family="Georgia,serif" font-size="13" font-weight="bold" fill="#f0e6d2">C</text>
+  <text x="154" y="130" font-family="'Courier New',monospace" font-size="13" letter-spacing="4" fill="#c7b28b">VOICE-FIRST PRESENTATION COPILOT</text>
+  <text x="148" y="226" font-family="'Iowan Old Style','Palatino Linotype',Georgia,serif" font-size="94" letter-spacing="2" fill="#f1e8d8">CAESAR</text>
+  <path d="M154 252H392" stroke="#8a4547" stroke-width="3"/>
+  <path d="M405 252H506" stroke="#c9aa70" stroke-opacity=".65" stroke-width="1"/>
+  <text x="154" y="301" font-family="'Iowan Old Style','Palatino Linotype',Georgia,serif" font-size="34" font-style="italic" fill="url(#gold)">Speak. Shape. Present.</text>
+  <text x="154" y="342" font-family="'Segoe UI',Arial,sans-serif" font-size="16" fill="#b9af9d">Turn a spoken intention into a story worth remembering.</text>
+  <text x="154" y="368" font-family="'Courier New',monospace" font-size="10" letter-spacing="2.1" fill="#817666">CLARITY · CRAFT · CONTROL</text>
+  <g transform="translate(800 0)" fill="none" stroke="#c9aa70">
+    <path d="M50 355V195C50 87 160 49 300 49s250 38 250 146v160" stroke-width="1.4" stroke-opacity=".52"/>
+    <path d="M76 355V198C76 104 174 72 300 72s224 32 224 126v157" stroke-width=".8" stroke-opacity=".35"/>
+    <path d="M35 355H565M43 344H557M55 181H545M55 189H545" stroke-width=".8" stroke-opacity=".38"/>
+    <path d="M114 190V338M126 190V338M104 190H136M100 181H140M102 338H138M206 190V338M218 190V338M196 190H228M192 181H232M194 338H230M382 190V338M394 190V338M372 190H404M368 181H408M370 338H406M474 190V338M486 190V338M464 190H496M460 181H500M462 338H498" stroke-width=".8" stroke-opacity=".45"/>
+    <circle cx="300" cy="192" r="53" stroke-width="1.2" stroke-opacity=".5"/>
+    <circle cx="300" cy="192" r="45" stroke-width=".7" stroke-opacity=".42"/>
+    <path d="M278 206c-14-13-14-31-2-45m-3 48c-7-12-6-25 2-36m27 33c14-13 14-31 2-45m3 48c7-12 6-25-2-36" stroke-width="1.1" stroke-opacity=".75" stroke-linecap="round"/>
+    <text x="300" y="207" text-anchor="middle" font-family="Georgia,serif" font-size="40" fill="#d8bf88" stroke="none">C</text>
+    <text x="300" y="389" text-anchor="middle" font-family="'Courier New',monospace" font-size="10" letter-spacing="3" fill="#b5a17a" stroke="none">ROMAN PRECISION / MODERN VOICE</text>
+  </g>
+  <path d="M1336 46V84M1336 356V394" stroke="#c9aa70" stroke-opacity=".35" stroke-width="1"/>
+</svg>
