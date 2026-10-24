@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { fetchDemoMetric, type DemoMetricResult } from "./api";
 import {
   Activity, ArrowUpRight, AudioLines, BarChart3, Bell, BookOpen,
   Check, ChevronDown, ChevronRight, CircleHelp, Clock3, Command, FileChartColumn,
@@ -38,6 +39,8 @@ export default function App() {
   const [tutorialStep, setTutorialStep] = useState(0);
   const [installed, setInstalled] = useState<string[]>([]);
   const [showHelp, setShowHelp] = useState(false);
+  const [metricResult, setMetricResult] = useState<DemoMetricResult | null>(null);
+  const [apiBusy, setApiBusy] = useState(false);
 
   const greeting = useMemo(() => {
     const h = new Date().getHours();
@@ -57,6 +60,21 @@ export default function App() {
     setListening(false);
     setActive("Create");
     setNotice("Proposal ready for your review. Nothing has changed on the presentation yet.");
+  }
+
+  async function testDemoApi() {
+    setApiBusy(true);
+    setNotice("Requesting a synthetic metric from the local API…");
+    try {
+      const result = await fetchDemoMetric("revenue", "2026-Q2");
+      setMetricResult(result);
+      setNotice("Synthetic API connected. Revenue for " + result.period + " returned with provenance.");
+    } catch (error) {
+      setMetricResult(null);
+      setNotice(error instanceof Error ? error.message : "Synthetic API request failed.");
+    } finally {
+      setApiBusy(false);
+    }
   }
 
   function approveProposal() {
@@ -116,7 +134,7 @@ export default function App() {
 
         {active === "Presentation" && <section className="subpage"><div className="eyebrow">PRESENTATION CANVAS</div><h1>Your story, <em>in focus.</em></h1><p className="subheading">Only approved proposals appear here. This prototype uses illustrative values, not company data.</p>{approved && proposal ? <div className="slide-preview"><div className="slide-top"><span>CAESAR / EXECUTIVE BRIEF</span><span>01 — 01</span></div><h2>{proposal.title}</h2><p className="slide-description">A clearer look at the trend behind the numbers.</p><div className="slide-chart"><MiniChart/></div><div className="slide-bottom"><span>Source: synthetic demonstration dataset</span><span>Illustrative values · not for business decisions</span></div></div> : <div className="empty-state"><div className="empty-icon"><Presentation size={26}/></div><h2>No approved visuals yet</h2><p>Draft a proposal and approve it to see it on your presentation canvas.</p><button className="primary-button" onClick={()=>setActive("Create")}>Create a proposal <ArrowUpRight size={15}/></button></div>}</section>}
 
-        {active === "Integrations" && <section className="subpage"><div className="eyebrow">CONNECTED WORKSPACE</div><h1>Your tools, <em>on your terms.</em></h1><p className="subheading">A curated catalog concept. Installation is simulated; no service is contacted and no credentials are collected.</p><div className="integration-banner"><ShieldCheck size={20}/><div><strong>Permission-first integrations</strong><p>Each connector will disclose data access, destination, and requested scopes before installation.</p></div></div><div className="integration-grid">{[{name:"Power BI",desc:"Bring approved reports and semantic-model metrics into your story.",tag:"Analytics",icon:"P",color:"power"},{name:"Microsoft 365",desc:"Use approved files and presentation templates from your workspace.",tag:"Productivity",icon:"M",color:"office"},{name:"Company data API",desc:"A governed route to approved metrics, definitions, and freshness.",tag:"Private data",icon:"D",color:"data"}].map(item=><article className="integration-card" key={item.name}><div className={`integration-logo ${item.color}`}>{item.icon}</div><span className="integration-tag">{item.tag}</span><h3>{item.name}</h3><p>{item.desc}</p><div className="integration-bottom"><span>{installed.includes(item.name)?"Demo enabled":"Not connected"}</span><button className={installed.includes(item.name)?"secondary-button":"primary-button"} onClick={()=>{setInstalled(installed.includes(item.name)?installed.filter(x=>x!==item.name):[...installed,item.name]);setNotice(installed.includes(item.name)?`${item.name} demo disabled.`:`${item.name} added to local demo list only. No connection was made.`);}}>{installed.includes(item.name)?"Disable demo":"Try demo"} {installed.includes(item.name)?<X size={13}/>:<Plus size={13}/>}</button></div></article>)}</div></section>}
+        {active === "Integrations" && <section className="subpage"><div className="eyebrow">CONNECTED WORKSPACE</div><h1>Your tools, <em>on your terms.</em></h1><p className="subheading">Power BI and Microsoft 365 remain UI-only concepts. The company API card can test the local synthetic endpoint; no company service or credentials are used.</p><div className="integration-banner"><ShieldCheck size={20}/><div><strong>Permission-first integrations</strong><p>Only the local synthetic API is callable in this prototype. It does not authenticate users or access company data.</p></div></div><div className="integration-grid">{[{name:"Power BI",desc:"Bring approved reports and semantic-model metrics into your story.",tag:"Analytics",icon:"P",color:"power"},{name:"Microsoft 365",desc:"Use approved files and presentation templates from your workspace.",tag:"Productivity",icon:"M",color:"office"},{name:"Company data API",desc:"Test the local synthetic metric contract and inspect returned provenance.",tag:"Synthetic API",icon:"D",color:"data"}].map(item=><article className="integration-card" key={item.name}><div className={`integration-logo ${item.color}`}>{item.icon}</div><span className="integration-tag">{item.tag}</span><h3>{item.name}</h3><p>{item.desc}</p>{item.name === "Company data API" && metricResult && <div className="api-result" role="status"><strong>Revenue · {metricResult.period}</strong><p>{new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(metricResult.value)}</p><small>{metricResult.definition}</small><small>Source: {metricResult.source}</small><small>Freshness: {metricResult.freshness} · Synthetic only</small><small>{metricResult.warning}</small></div>}<div className="integration-bottom"><span>{item.name === "Company data API" ? metricResult ? "Synthetic API reachable" : "Not tested" : installed.includes(item.name) ? "Demo enabled" : "Not connected"}</span><button disabled={item.name === "Company data API" && apiBusy} className={item.name === "Company data API" ? "primary-button" : installed.includes(item.name) ? "secondary-button" : "primary-button"} onClick={() => {if (item.name === "Company data API") { void testDemoApi(); return; } setInstalled(installed.includes(item.name)?installed.filter(x=>x!==item.name):[...installed,item.name]);setNotice(installed.includes(item.name)?item.name+" demo disabled.":item.name+" added to local demo list only. No connection was made.");}}>{item.name === "Company data API" ? apiBusy ? "Testing…" : metricResult ? "Test again" : "Test synthetic API" : installed.includes(item.name) ? "Disable demo" : "Try demo"} {item.name === "Company data API" ? <ArrowUpRight size={13}/> : installed.includes(item.name) ? <X size={13}/> : <Plus size={13}/>}</button></div></article>)}</div></section>}
 
         {active === "Templates" && <section className="subpage"><div className="eyebrow">START WITH A STRONG STORY</div><h1>Good structure. <em>Great clarity.</em></h1><p className="subheading">Original starter directions for the stories teams tell most often.</p><div className="template-grid">{[{name:"The executive brief",type:"DECISION-MAKING",desc:"One headline, three signals, one clear next step.",style:"template-dark"},{name:"The growth story",type:"PERFORMANCE",desc:"A grounded trend, its context, and the question it raises.",style:"template-green"},{name:"The project pulse",type:"TEAM UPDATE",desc:"Progress, risk, and decisions needed from stakeholders.",style:"template-paper"}].map((t,i)=><button className="template-card" key={t.name} onClick={()=>{setQuery(t.name);setProposal({title:t.name,detail:t.desc,chart:"Template preview · synthetic dataset",reason:"This is an original starter concept, not a connected data source."});setApproved(false);setActive("Create");}}><div className={`template-art ${t.style}`}><span className="art-kicker">CAESAR / {String(i+1).padStart(2,"0")}</span><div className="art-lines"><i/><i/><i/></div><MiniChart values={sales.slice(i, i+8)}/></div><span className="eyebrow">{t.type}</span><h3>{t.name}</h3><p>{t.desc}</p><span className="template-open">Use template <ArrowUpRight size={14}/></span></button>)}</div></section>}
 
