@@ -10,23 +10,21 @@ Its visual identity takes cues from Roman editorial design: architectural struct
 
 ## The marble canon
 
-<table>
-  <tr>
-    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/laurel-gaze.webp" alt="The Laurel Gaze" width="150" /><br/><strong>The Laurel Gaze</strong></td>
-    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp" alt="The Votive Figure" width="150" /><br/><strong>The Votive Figure</strong></td>
-    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/contemplative-muse.webp" alt="The Contemplative Muse" width="150" /><br/><strong>The Contemplative Muse</strong></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp" alt="The Draped Muse" width="150" /><br/><strong>The Draped Muse</strong></td>
-    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp" alt="The Marble Profile" width="150" /><br/><strong>The Marble Profile</strong></td>
-    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/standing-muse.webp" alt="The Standing Muse" width="150" /><br/><strong>The Standing Muse</strong></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/profile-study.webp" alt="The Profile Study" width="150" /><br/><strong>The Profile Study</strong></td>
-    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp" alt="The Lyre Muse" width="150" /><br/><strong>The Lyre Muse</strong></td>
-    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp" alt="The Oracle Gaze" width="150" /><br/><strong>The Oracle Gaze</strong></td>
-  </tr>
-</table>
+<p align="center">
+  <a href="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp"><img src="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp" alt="Classical marble portrait looking toward the light" width="126" /></a>&nbsp;&nbsp;&nbsp;
+  <a href="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp" alt="Full-length classical marble figure in layered drapery" width="108" /></a>&nbsp;&nbsp;&nbsp;
+  <a href="apps/windows-prototype/public/images/caesar-statues/profile-study.webp"><img src="apps/windows-prototype/public/images/caesar-statues/profile-study.webp" alt="Side view of a carved marble figure with curled hair" width="118" /></a>
+</p>
+<p align="center">
+  <a href="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp"><img src="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp" alt="Full-length marble figure framed by tall windows" width="116" /></a>&nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp"><img src="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp" alt="Marble profile turned toward warm gallery light" width="132" /></a>
+</p>
+<p align="center">
+  <a href="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp" alt="Draped marble figure holding a lyre" width="104" /></a>&nbsp;&nbsp;&nbsp;
+  <a href="apps/windows-prototype/public/images/caesar-statues/laurel-gaze.webp"><img src="apps/windows-prototype/public/images/caesar-statues/laurel-gaze.webp" alt="Marble portrait wearing a laurel wreath" width="122" /></a>&nbsp;&nbsp;&nbsp;
+  <a href="apps/windows-prototype/public/images/caesar-statues/standing-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/standing-muse.webp" alt="Standing marble figure beside stone columns" width="126" /></a>&nbsp;&nbsp;&nbsp;
+  <a href="apps/windows-prototype/public/images/caesar-statues/contemplative-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/contemplative-muse.webp" alt="Contemplative marble figure with lowered head" width="112" /></a>
+</p>
 
 ## Product principles
 
