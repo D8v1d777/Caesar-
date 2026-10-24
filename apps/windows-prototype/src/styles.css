@@ -374,3 +374,97 @@ button:focus-visible, textarea:focus-visible, select:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   .nav-item, .primary-button { transition: none !important; }
 }
+
+
+/* Classical typography and the statue gallery. */
+:root {
+  --roman-type: "Cinzel", "Trajan Pro", "Palatino Linotype", "Book Antiqua", Georgia, "Times New Roman", serif;
+  --serif: var(--roman-type);
+  font-family: var(--roman-type);
+}
+*, *::before, *::after { font-family: var(--roman-type) !important; }
+.statue-gallery-page > h1 {
+  font: 600 clamp(34px, 3.5vw, 47px)/1.1 var(--roman-type);
+  letter-spacing: -.045em; margin: 15px 0 11px;
+}
+.statue-gallery-page > h1 em { color: #d7b77d; font-style: normal; }
+.statue-gallery-heading {
+  margin: 34px 0 16px; padding-top: 17px;
+  border-top: 1px solid rgba(236, 225, 204, .12);
+  display: flex; justify-content: space-between; align-items: end; gap: 14px;
+}
+.statue-gallery-heading h2 {
+  margin: 8px 0 0; font-size: clamp(18px, 2vw, 24px); line-height: 1.25;
+  letter-spacing: -.03em; font-weight: 500; color: #f1e8d8;
+}
+.gallery-count { flex: 0 0 auto; color: #d7b77d; font-size: 24px; letter-spacing: .1em; }
+.gallery-count span { font-size: 9px; letter-spacing: .14em; color: #b1a38d; }
+.statue-gallery { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 22px; }
+.statue-card {
+  min-width: 0; overflow: hidden; border: 1px solid rgba(236, 225, 204, .13);
+  border-radius: 12px; background: #1b1916; transition: border-color .22s ease, transform .22s ease;
+}
+.statue-card:hover { border-color: rgba(201, 170, 112, .48); transform: translateY(-3px); }
+.statue-artwork {
+  position: relative; display: block; width: 100%; aspect-ratio: 4 / 5; overflow: hidden;
+  padding: 0; border: 0; border-radius: 0; background: #141210; color: #f2e4c9; text-align: left;
+}
+.statue-artwork::after {
+  content: ""; position: absolute; inset: 35% 0 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(14, 12, 10, .18) 36%, rgba(14, 12, 10, .82) 100%);
+  pointer-events: none;
+}
+.statue-artwork img {
+  display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 35%;
+  filter: sepia(.12) saturate(.8) contrast(1.04);
+  transition: transform .55s cubic-bezier(.2,.65,.25,1), filter .3s ease;
+}
+.statue-card:hover .statue-artwork img, .statue-artwork:focus-visible img {
+  transform: scale(1.045); filter: sepia(.04) saturate(.94) contrast(1.04);
+}
+.statue-number {
+  position: absolute; z-index: 1; top: 12px; left: 12px;
+  color: #f1dfb5; border: 1px solid rgba(241, 223, 181, .45);
+  background: rgba(19, 18, 16, .56); padding: 5px 7px; font-size: 9px; letter-spacing: .12em;
+}
+.statue-open {
+  position: absolute; z-index: 1; inset: auto 13px 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  color: #f1dfb5; font-size: 10px; letter-spacing: .03em; opacity: 0; transform: translateY(4px);
+  transition: opacity .2s ease, transform .2s ease;
+}
+.statue-card:hover .statue-open, .statue-artwork:focus-visible .statue-open { opacity: 1; transform: translateY(0); }
+.statue-caption { padding: 14px 15px 16px; }
+.statue-caption > span { display: block; margin-bottom: 7px; color: #b6a78c; font-size: 9px; line-height: 1.4; letter-spacing: .06em; }
+.statue-caption h3 { margin: 0; color: #f1e8d8; font-size: clamp(12px, 1.2vw, 15px); line-height: 1.35; font-weight: 500; letter-spacing: -.015em; }
+.statue-modal-backdrop { padding: 20px; z-index: 20; }
+.statue-modal {
+  position: relative; display: grid; grid-template-columns: minmax(210px, .9fr) minmax(240px, 1fr);
+  width: min(760px, 100%); max-height: min(84vh, 780px); overflow: auto;
+  border: 1px solid rgba(201, 170, 112, .33); border-radius: 13px; background: #1b1916;
+  box-shadow: 0 28px 100px rgba(0,0,0,.55);
+}
+.statue-modal .modal-close { z-index: 2; color: #f0e4cd; background: rgba(19, 18, 16, .72); }
+.statue-modal-image { min-height: 360px; max-height: 630px; background: #131210; }
+.statue-modal-image img { width: 100%; height: 100%; display: block; object-fit: cover; object-position: center 30%; }
+.statue-modal-copy { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: clamp(22px, 4vw, 38px); }
+.statue-modal-copy h2 { margin: 16px 0 12px; color: #f1e8d8; font: 600 clamp(22px, 3vw, 32px)/1.15 var(--roman-type); letter-spacing: -.04em; }
+.statue-modal-copy p { margin: 0 0 22px; color: #c0b3a0; font-size: 13px; line-height: 1.8; }
+.statue-modal-copy > span { display: block; padding-top: 12px; border-top: 1px solid rgba(236, 225, 204, .14); color: #d4b477; font-size: 10px; letter-spacing: .08em; }
+@media (max-width: 1100px) { .statue-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; } }
+@media (max-width: 760px) {
+  .statue-gallery-page > h1 { font-size: 31px; }
+  .statue-gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .statue-caption { padding: 11px 10px 13px; }
+  .statue-caption h3 { font-size: 12px; }
+  .statue-open { opacity: 1; transform: none; }
+  .statue-modal { grid-template-columns: 1fr; max-width: 430px; }
+  .statue-modal-image { height: 42vh; min-height: 230px; max-height: 380px; }
+  .statue-modal-copy { padding: 22px; }
+  .statue-modal-copy h2 { margin: 12px 0 9px; }
+  .statue-modal-copy p { font-size: 12px; margin-bottom: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .statue-card, .statue-artwork img, .statue-open { transition: none !important; }
+  .statue-card:hover { transform: none; }
+}

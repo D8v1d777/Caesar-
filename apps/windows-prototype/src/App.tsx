@@ -5,12 +5,12 @@ import { initialVoiceSessionState, transitionVoiceSession, type VoiceSessionStat
 import { getLocalSpeechStatus, startLocalAudioCapture, transcribeLocalWav, type LocalAudioCapture } from "./localVoice";
 import {
   Activity, ArrowUpRight, AudioLines, BarChart3, Bell, BookOpen,
-  Check, ChevronDown, ChevronRight, CircleHelp, Command, FileChartColumn,
+  Check, ChevronDown, ChevronRight, CircleHelp, Command, FileChartColumn, Images,
   Gauge, LayoutDashboard, LockKeyhole, Mic, MicOff, MoreHorizontal, Plus,
   Presentation, Search, Settings2, ShieldCheck, Sparkles, TrendingUp, X
 } from "lucide-react";
 
-type View = "Overview" | "Create" | "Presentation" | "Integrations" | "Templates" | "Tutorial";
+type View = "Overview" | "Create" | "Presentation" | "Integrations" | "Templates" | "Gallery" | "Tutorial";
 type Proposal = { title: string; detail: string; chart: string; reason: string; metricResult?: DemoMetricResult };
 
 function formatDemoMetricValue(result: DemoMetricResult): string {
@@ -22,8 +22,24 @@ function formatDemoMetricValue(result: DemoMetricResult): string {
 const nav: { label: View; icon: typeof LayoutDashboard }[] = [
   { label: "Overview", icon: LayoutDashboard }, { label: "Create", icon: Sparkles },
   { label: "Presentation", icon: Presentation }, { label: "Integrations", icon: Command },
-  { label: "Templates", icon: FileChartColumn }, { label: "Tutorial", icon: BookOpen },
+  { label: "Templates", icon: FileChartColumn }, { label: "Gallery", icon: Images },
+  { label: "Tutorial", icon: BookOpen },
 ];
+
+type StatueArtwork = { name: string; epithet: string; alt: string; image: string; description: string; };
+
+const statueArtworks: StatueArtwork[] = [
+  { name: "The Laurel Gaze", epithet: "Marble portrait · I", alt: "Marble portrait of a classical woman wearing a laurel wreath, looking upward.", image: "/images/caesar-statues/laurel-gaze.webp", description: "A quiet upward gaze, laurel leaves, and a face shaped by light and shadow." },
+  { name: "The Votive Figure", epithet: "Standing sculpture · II", alt: "Full-length marble woman in flowing drapery, arms lifted beneath a tall arch.", image: "/images/caesar-statues/votive-figure.webp", description: "Flowing stone folds and an ascending silhouette frame a gesture of offering." },
+  { name: "The Contemplative Muse", epithet: "Sculptural study · III", alt: "Classical marble woman with lowered head and delicately carved hair.", image: "/images/caesar-statues/contemplative-muse.webp", description: "A contemplative profile, carved curls, and tactile marble softened by gallery light." },
+  { name: "The Draped Muse", epithet: "Standing sculpture · IV", alt: "Full-length classical marble woman wearing layered draped robes in a shadowed gallery.", image: "/images/caesar-statues/draped-muse.webp", description: "The vertical fall of the garment gives the figure its rhythm and quiet authority." },
+  { name: "The Marble Profile", epithet: "Laurel portrait · V", alt: "Classical marble head with laurel wreath and face turned toward the light.", image: "/images/caesar-statues/marble-profile.webp", description: "A monumental profile defined by the contrast between polished stone and deep shadow." },
+  { name: "The Standing Muse", epithet: "Full figure · VI", alt: "Full-length marble woman in a classical robe standing beside stone columns.", image: "/images/caesar-statues/standing-muse.webp", description: "Balanced posture, architectural framing, and carefully restrained folds of drapery." },
+  { name: "The Profile Study", epithet: "Sculptural study · VII", alt: "Side view of a carved marble woman's head and shoulder with detailed curled hair.", image: "/images/caesar-statues/profile-study.webp", description: "The turn of the neck and carved hair bring a quiet sense of movement to stone." },
+  { name: "The Lyre Muse", epithet: "Figure with lyre · VIII", alt: "Draped classical marble woman holding a lyre inside a dimly lit stone hall.", image: "/images/caesar-statues/lyre-muse.webp", description: "Music and sculpture meet in a composed figure framed by warm architectural light." },
+  { name: "The Oracle Gaze", epithet: "Marble portrait · IX", alt: "Close-up marble portrait of a classical woman looking toward the light.", image: "/images/caesar-statues/oracle-gaze.webp", description: "An upward glance, sculpted curls, and a strong silhouette against the darkened hall." },
+];
+
 const sales = [42, 57, 49, 70, 62, 81, 74, 95, 86, 104, 92, 118];
 
 function MiniChart({ values = sales }: { values?: number[] }) {
@@ -74,6 +90,7 @@ export default function App() {
   const [tutorialStep, setTutorialStep] = useState(0);
   const [installed, setInstalled] = useState<string[]>([]);
   const [showHelp, setShowHelp] = useState(false);
+  const [selectedStatue, setSelectedStatue] = useState<StatueArtwork | null>(null);
   const [metricResult, setMetricResult] = useState<DemoMetricResult | null>(null);
   const [apiBusy, setApiBusy] = useState(false);
   const [selectedMetric, setSelectedMetric] = useState<DemoMetricName>("revenue");
@@ -279,9 +296,41 @@ export default function App() {
         {active === "Templates" && <section className="subpage"><div className="eyebrow">START WITH A STRONG STORY</div><h1>Good structure. <em>Great clarity.</em></h1><p className="subheading">Original starter directions for the stories teams tell most often.</p><div className="template-grid">{[{name:"The executive brief",type:"DECISION-MAKING",desc:"One headline, three signals, one clear next step.",style:"template-dark"},{name:"The growth story",type:"PERFORMANCE",desc:"A grounded trend, its context, and the question it raises.",style:"template-green"},{name:"The project pulse",type:"TEAM UPDATE",desc:"Progress, risk, and decisions needed from stakeholders.",style:"template-paper"}].map((t,i)=><button className="template-card" key={t.name} onClick={()=>{setQuery(t.name);setProposal({title:t.name,detail:t.desc,chart:"Template preview · synthetic dataset",reason:"This is an original starter concept, not a connected data source."});setApprovedProposalKey(null);setActive("Create");}}><div className={`template-art ${t.style}`}><span className="art-kicker">CAESAR / {String(i+1).padStart(2,"0")}</span><div className="art-lines"><i/><i/><i/></div><MiniChart values={sales.slice(i, i+8)}/></div><span className="eyebrow">{t.type}</span><h3>{t.name}</h3><p>{t.desc}</p><span className="template-open">Use template <ArrowUpRight size={14}/></span></button>)}</div></section>}
 
         {active === "Tutorial" && <section className="subpage"><div className="eyebrow">THE 3-MINUTE TOUR</div><h1>Meet your new <em>copilot.</em></h1><p className="subheading">A short guided tour of the approval-first workflow.</p><div className="tutorial-layout"><div className="tutorial-steps">{["Start with a thought","Review the proposal","Approve the change","Connect with care"].map((s,i)=><button key={s} className={tutorialStep===i?"tutorial-step selected":"tutorial-step"} onClick={()=>setTutorialStep(i)}><span>{i+1}</span><div><strong>{s}</strong><small>{["Describe the story you need.","Check what Caesar plans to do.","You decide what reaches the canvas.","Review access before connecting data."][i]}</small></div>{tutorialStep===i&&<ChevronRight size={16}/>}</button>)}</div><div className="tutorial-detail"><div className="tutorial-illustration"><div className="tutorial-orb"><AudioLines size={32}/></div><span>STEP 0{tutorialStep+1} / 04</span></div><h2>{["Say what matters.","Nothing happens in the dark.","Your approval is the switch.","Your data deserves boundaries."][tutorialStep]}</h2><p>{["Start with plain language. Caesar can prepare a structured proposal from your request. Voice input requires an explicitly configured, checksum-verified local speech runtime. The browser prototype never falls back to cloud transcription.","Before anything changes, you'll see a summary of the intended action and which data it would use. Ambiguity means ask, not guess.","Approval applies to the exact proposal reviewed. If the content changes, the previous approval is no longer valid.","Integrations will show their publisher, requested permissions, data destination, and controls to test, disable, or revoke access."][tutorialStep]}</p><div className="tutorial-nav"><button className="secondary-button" disabled={tutorialStep===0} onClick={()=>setTutorialStep(Math.max(0,tutorialStep-1))}>Back</button><button className="primary-button" onClick={()=>tutorialStep===3?setActive("Overview"):setTutorialStep(tutorialStep+1)}>{tutorialStep===3?"Finish tour":"Next step"} <ChevronRight size={14}/></button></div></div></div></section>}
+        {active === "Gallery" && <section className="subpage statue-gallery-page">
+          <div className="eyebrow">THE ART OF FORM · MARBLE STUDIES</div>
+          <h1>Figures of <em>antiquity.</em></h1>
+          <p className="subheading">A collection of classical figures, shaped by gesture, proportion, light, and stone.</p>
+          <div className="statue-gallery-heading">
+            <div><span className="eyebrow">THE MARBLE CANON</span><h2>Studies in grace and permanence</h2></div>
+            <span className="gallery-count">IX <span>FIGURES</span></span>
+          </div>
+          <div className="statue-gallery">
+            {statueArtworks.map((statue, index) => <article className="statue-card" key={statue.image}>
+              <button className="statue-artwork" onClick={() => setSelectedStatue(statue)} aria-label={`Inspect ${statue.name}`}>
+                <img src={statue.image} alt={statue.alt} loading="lazy" />
+                <span className="statue-number">{String(index + 1).padStart(2, "0")}</span>
+                <span className="statue-open"><span>View figure</span><ArrowUpRight size={16}/></span>
+              </button>
+              <div className="statue-caption"><span>{statue.epithet}</span><h3>{statue.name}</h3></div>
+            </article>)}
+          </div>
+        </section>}
+
       </div>
       <footer className="statusbar"><span><span className="live-dot"/> {notice}</span><span><LockKeyhole size={12}/> Local demo · No company connection <span className="status-divider"/> <button onClick={()=>setShowHelp(true)}>About this prototype</button></span></footer>
     </main>
+    {selectedStatue && <div className="modal-backdrop statue-modal-backdrop" onClick={() => setSelectedStatue(null)}>
+      <section className="statue-modal" role="dialog" aria-modal="true" aria-labelledby="statue-modal-title" onClick={e => e.stopPropagation()}>
+        <button className="modal-close" onClick={() => setSelectedStatue(null)} aria-label="Close figure detail"><X size={18}/></button>
+        <div className="statue-modal-image"><img src={selectedStatue.image} alt={selectedStatue.alt}/></div>
+        <div className="statue-modal-copy">
+          <div className="eyebrow">CAESAR · THE MARBLE CANON</div>
+          <h2 id="statue-modal-title">{selectedStatue.name}</h2>
+          <p>{selectedStatue.description}</p>
+          <span>{selectedStatue.epithet}</span>
+        </div>
+      </section>
+    </div>}
     {showHelp && <div className="modal-backdrop" onClick={()=>setShowHelp(false)}><section className="help-modal" onClick={e=>e.stopPropagation()}><button className="modal-close" onClick={()=>setShowHelp(false)} aria-label="Close"><X size={18}/></button><div className="trust-mark"><ShieldCheck size={22}/></div><div className="eyebrow">PROTOTYPE NOTES</div><h2>Designed to earn trust.</h2><p>This is an interactive front-end prototype built around Caesar's proposed approval-first workflow. It uses synthetic values only.</p><ul><li><Check size={15}/> Navigation, starter prompts, and tutorial work locally.</li><li><Check size={15}/> Proposal review and approval are simulated in browser state.</li><li><X size={15}/> Microphone capture, speech recognition, real integrations, export, and backend authorization are not implemented.</li></ul><button className="primary-button" onClick={()=>setShowHelp(false)}>Got it <Check size={15}/></button></section></div>}
   </div>;
 }
