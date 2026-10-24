@@ -25,7 +25,13 @@ export async function fetchDemoMetric(metric: DemoMetricName = "revenue", period
     throw new Error("Synthetic API is unreachable. Start the local API on 127.0.0.1:8000 and retry.");
   }
   if (!response.ok) throw new Error("Synthetic API rejected the request (HTTP " + response.status + ").");
-  const result: unknown = await response.json();
+
+  let result: unknown;
+  try {
+    result = await response.json();
+  } catch {
+    throw new Error("Synthetic API returned an unreadable response.");
+  }
   if (!isDemoMetricResult(result) || result.metric !== metric || result.period !== period) {
     throw new Error("Synthetic API returned an invalid or mismatched metric response.");
   }
