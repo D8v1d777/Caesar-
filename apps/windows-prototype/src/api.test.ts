@@ -59,11 +59,19 @@ describe("fetchDemoMetric", () => {
     await expect(fetchDemoMetric("revenue", "2026-Q2")).rejects.toThrow(/invalid or mismatched/i);
   });
 
+  it("rejects conversion rates above 100 percent", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(mockResponse({
+      ...validResult, metric: "conversion_rate", value: 100.01, unit: "percent",
+    })));
+    await expect(fetchDemoMetric("conversion_rate", "2026-Q2")).rejects.toThrow(/invalid or mismatched/i);
+  });
+
   it.each([
     ["negative values", { ...validResult, value: -1 }],
     ["non-finite values", { ...validResult, value: Number.NaN }],
     ["wrong units", { ...validResult, unit: "customers" }],
-    ["missing source", { ...validResult, source: "" }],
+    ["blank source", { ...validResult, source: "   " }],
+    ["blank definition", { ...validResult, definition: " " }],
     ["non-synthetic responses", { ...validResult, is_synthetic: false }],
     ["missing warning", { ...validResult, warning: "" }],
   ])("rejects invalid provenance or value: %s", async (_label, body) => {
