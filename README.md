@@ -8,6 +8,26 @@ Caesar is a privacy-first, voice-driven presentation copilot. It helps people tu
 
 Its visual identity takes cues from Roman editorial design: architectural structure, classical typography, antique brass, warm stone, and a measured oxblood accent. The result is confident and recognisable without turning the product into a costume.
 
+## The marble canon
+
+<table>
+  <tr>
+    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/laurel-gaze.webp" alt="The Laurel Gaze" width="150" /><br/><strong>The Laurel Gaze</strong></td>
+    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp" alt="The Votive Figure" width="150" /><br/><strong>The Votive Figure</strong></td>
+    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/contemplative-muse.webp" alt="The Contemplative Muse" width="150" /><br/><strong>The Contemplative Muse</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp" alt="The Draped Muse" width="150" /><br/><strong>The Draped Muse</strong></td>
+    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp" alt="The Marble Profile" width="150" /><br/><strong>The Marble Profile</strong></td>
+    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/standing-muse.webp" alt="The Standing Muse" width="150" /><br/><strong>The Standing Muse</strong></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/profile-study.webp" alt="The Profile Study" width="150" /><br/><strong>The Profile Study</strong></td>
+    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp" alt="The Lyre Muse" width="150" /><br/><strong>The Lyre Muse</strong></td>
+    <td align="center"><img src="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp" alt="The Oracle Gaze" width="150" /><br/><strong>The Oracle Gaze</strong></td>
+  </tr>
+</table>
+
 ## Product principles
 
 - **Windows first, Android second.** The first production client targets Windows desktop. Android is a planned follow-on client, not a launch blocker.
