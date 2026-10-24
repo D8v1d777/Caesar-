@@ -32,3 +32,41 @@
   opacity: .65;
   cursor: progress;
 }
+
+
+.grounded-metric {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: min(100%, 560px);
+  margin: 28px 0 auto;
+  padding: clamp(18px, 4vw, 32px);
+  border: 1px solid #c7cfba;
+  border-radius: 12px;
+  background: #f2f4ec;
+  color: #283020;
+}
+.grounded-metric > span {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #59634d;
+}
+.grounded-metric > strong {
+  font-size: clamp(32px, 6vw, 58px);
+  line-height: 1.05;
+  letter-spacing: -.055em;
+  overflow-wrap: anywhere;
+}
+.grounded-metric > small {
+  max-width: 560px;
+  color: #59634d;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.use-metric-button {
+  justify-self: start;
+  margin-top: 6px;
+}
