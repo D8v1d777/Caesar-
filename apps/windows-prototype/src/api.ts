@@ -35,9 +35,10 @@ export async function fetchDemoMetric(metric: DemoMetricName = "revenue", period
 function isDemoMetricResult(value: unknown): value is DemoMetricResult {
   if (typeof value !== "object" || value === null) return false;
   const result = value as Record<string, unknown>;
+  const expectedUnits: Record<DemoMetricName, DemoMetricResult["unit"]> = { revenue: "USD", active_customers: "customers", conversion_rate: "percent" };
   return typeof result.metric === "string" &&
     typeof result.value === "number" && Number.isFinite(result.value) && result.value >= 0 &&
-    ["USD", "customers", "percent"].includes(String(result.unit)) &&
+    (result.metric in expectedUnits) && result.unit === expectedUnits[result.metric as DemoMetricName] &&
     typeof result.period === "string" && typeof result.source === "string" && result.source.length > 0 &&
     typeof result.definition === "string" && result.definition.length > 0 &&
     result.freshness === "synthetic_fixture" && result.is_synthetic === true &&
