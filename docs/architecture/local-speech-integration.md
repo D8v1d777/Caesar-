@@ -1,6 +1,6 @@
 # Local Speech Integration Contract
 
-**Status:** Design contract for the next Windows runtime milestone. This document does not claim that microphone capture or speech recognition is implemented.
+**Status:** The loopback browser prototype now has an optional capture and local whisper.cpp process adapter. The runtime is not bundled or configured by default, and Windows end-to-end behavior has not been manually verified.
 
 ## Decision
 
@@ -27,7 +27,7 @@ Required constraints:
 
 ## Session state contract
 
-Implemented in `apps/windows-prototype/src/voiceSession.ts`, the pure reducer defines the expected lifecycle:
+Implemented in `apps/windows-prototype/src/voiceSession.ts`, the pure reducer defines the expected lifecycle. The optional prototype bridge is in `apps/windows-prototype/src/localVoice.ts` and `services/api/app/speech.py`; the API is restricted to loopback clients and an exact development Origin:
 
 `unavailable → idle → requesting_permission → listening → transcribing → transcript_ready`
 
@@ -55,4 +55,4 @@ Permission denial, transcription failure, cancellation, empty speech, out-of-ord
 
 ## Not yet implemented
 
-The desktop shell, microphone capture, runtime bridge, process supervision, model installation, audio conversion, and real local transcription are not implemented yet. The current PR only defines and tests the frontend state contract and corrects the misleading microphone UI.
+The packaged Tauri desktop shell, bundled runtime/model installer, release integrity manifest, process supervision/cancellation for in-flight transcription, streaming transcription, and Windows hardware benchmarks remain unimplemented. The current local prototype uses browser capture and a temporary WAV file for a bounded one-shot command. It must not be treated as production-ready until loopback-only egress, file cleanup on every failure path, cancellation/timeout behavior, source authenticity, and Windows acceptance tests are independently verified.
