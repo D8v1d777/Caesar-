@@ -33,9 +33,9 @@ Start the API from a separate terminal, bound to loopback:
 ```powershell
 cd services/api
 python -m pip install -r requirements-dev.txt
-$env:CAESAR_WHISPER_CPP_PATH = "C:\\path\\to\\whisper-cli.exe"
+$env:CAESAR_WHISPER_CPP_PATH = "C:\path\to\whisper-cli.exe"
 $env:CAESAR_WHISPER_CPP_SHA256 = (Get-FileHash $env:CAESAR_WHISPER_CPP_PATH -Algorithm SHA256).Hash
-$env:CAESAR_WHISPER_MODEL_PATH = "C:\\path\\to\\verified-model.bin"
+$env:CAESAR_WHISPER_MODEL_PATH = "C:\path\to\verified-model.bin"
 $env:CAESAR_WHISPER_MODEL_SHA256 = (Get-FileHash $env:CAESAR_WHISPER_MODEL_PATH -Algorithm SHA256).Hash
 python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
