@@ -10,7 +10,7 @@ Its visual identity takes cues from Roman editorial design: architectural struct
 
 ## Product principles
 
-<p align="right"><img src="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp" alt="Classical marble portrait looking toward the light" width="112" /></p>
+<p align="right"><img src="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp" alt="Classical marble portrait looking toward the light" width="190" /></p>
 
 - **Windows first, Android second.** The first production client targets Windows desktop. Android is a planned follow-on client, not a launch blocker.
 - **Hybrid interaction.** Caesar listens only when enabled, understands context, and proposes useful actions. It does not change the visible presentation until the presenter approves.
@@ -21,13 +21,13 @@ Its visual identity takes cues from Roman editorial design: architectural struct
 
 ## Status
 
-<p align="left"><img src="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp" alt="Full-length classical marble figure in layered drapery" width="96" /></p>
+<p align="left"><img src="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp" alt="Full-length classical marble figure in layered drapery" width="180" /></p>
 
 This repository contains an **early interactive prototype and API contract spike**, not a production application. The Windows prototype is a React/TypeScript web app; the FastAPI service serves fixed synthetic metrics. CI builds the frontend and runs the API tests. The proposal approval and integration controls are simulated local UI state. An optional loopback-only browser voice path can capture a short clip and call a verified local whisper.cpp runtime when the executable and model are explicitly configured; it is disabled by default and has no cloud fallback. The frontend can request an allowlisted synthetic metric and carry its validated value and provenance into a proposal; approval remains a browser-local stale-content guard, not server authorization. The Tauri desktop shell, packaged runtime, model installer, model orchestration, authentication, live database, and real company connectors are not implemented.
 
 ## Start here
 
-<p align="center"><img src="apps/windows-prototype/public/images/caesar-statues/profile-study.webp" alt="Side view of a carved marble figure with curled hair" width="108" /></p>
+<p align="center"><img src="apps/windows-prototype/public/images/caesar-statues/profile-study.webp" alt="Side view of a carved marble figure with curled hair" width="195" /></p>
 
 1. Product requirements: [docs/product/PRD.md](docs/product/PRD.md)
 2. Architecture: [docs/architecture/overview.md](docs/architecture/overview.md)
@@ -42,7 +42,7 @@ This repository contains an **early interactive prototype and API contract spike
 
 ## Proposed first-release architecture
 
-<p align="right"><img src="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp" alt="Full-length marble figure framed by tall windows" width="104" /></p>
+<p align="right"><img src="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp" alt="Full-length marble figure framed by tall windows" width="185" /></p>
 
 - Windows desktop client: Tauri 2 + React + TypeScript, subject to a short architecture spike.
 - Company-controlled processing API: Python + FastAPI.
@@ -56,7 +56,7 @@ These are proposed technology choices, not evidence of a working implementation.
 
 ## Team rules
 
-<p align="left"><img src="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp" alt="Marble profile turned toward warm gallery light" width="120" /></p>
+<p align="left"><img src="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp" alt="Marble profile turned toward warm gallery light" width="205" /></p>
 
 - Read the product, architecture, and security docs before implementing a feature.
 - Never connect real company data during early prototypes; use synthetic data.
@@ -68,7 +68,7 @@ These are proposed technology choices, not evidence of a working implementation.
 
 ## Current implementation status
 
-<p align="center"><img src="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp" alt="Draped marble figure holding a lyre" width="92" /></p>
+<p align="center"><img src="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp" alt="Draped marble figure holding a lyre" width="175" /></p>
 
 | Area | Current state | Important boundary |
 |---|---|---|
