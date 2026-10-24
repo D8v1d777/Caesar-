@@ -13,6 +13,13 @@ export type DemoMetricResult = {
   warning: string;
 };
 
+const expectedUnits: Record<DemoMetricName, DemoMetricResult["unit"]> = {
+  revenue: "USD",
+  active_customers: "customers",
+  conversion_rate: "percent",
+};
+const allowedPeriods: readonly DemoPeriod[] = ["2026-Q1", "2026-Q2", "2026-Q3", "2026-Q4"];
+
 export async function fetchDemoMetric(metric: DemoMetricName = "revenue", period: DemoPeriod = "2026-Q2"): Promise<DemoMetricResult> {
   let response: Response;
   try {
@@ -41,12 +48,15 @@ export async function fetchDemoMetric(metric: DemoMetricName = "revenue", period
 function isDemoMetricResult(value: unknown): value is DemoMetricResult {
   if (typeof value !== "object" || value === null) return false;
   const result = value as Record<string, unknown>;
-  const expectedUnits: Record<DemoMetricName, DemoMetricResult["unit"]> = { revenue: "USD", active_customers: "customers", conversion_rate: "percent" };
-  return typeof result.metric === "string" &&
-    typeof result.value === "number" && Number.isFinite(result.value) && result.value >= 0 &&
-    (result.metric in expectedUnits) && result.unit === expectedUnits[result.metric as DemoMetricName] &&
-    typeof result.period === "string" && typeof result.source === "string" && result.source.length > 0 &&
-    typeof result.definition === "string" && result.definition.length > 0 &&
+  if (typeof result.metric !== "string" || !(result.metric in expectedUnits)) return false;
+  const metric = result.metric as DemoMetricName;
+  return typeof result.value === "number" &&
+    Number.isFinite(result.value) && result.value >= 0 &&
+    (metric !== "conversion_rate" || result.value <= 100) &&
+    result.unit === expectedUnits[metric] &&
+    typeof result.period === "string" && allowedPeriods.includes(result.period as DemoPeriod) &&
+    typeof result.source === "string" && result.source.trim().length > 0 &&
+    typeof result.definition === "string" && result.definition.trim().length > 0 &&
     result.freshness === "synthetic_fixture" && result.is_synthetic === true &&
-    typeof result.warning === "string" && result.warning.length > 0;
+    typeof result.warning === "string" && result.warning.trim().length > 0;
 }
