@@ -39,3 +39,7 @@ export function getProposalApprovalKey(snapshot: ApprovalSnapshot): string {
     } : null,
   });
 }
+
+export function canApproveProposal(title: string): boolean {
+  return title.trim().length > 0;
+}
