@@ -2,8 +2,10 @@ from itertools import product
 
 import pytest
 from fastapi.testclient import TestClient
+from pydantic import ValidationError
 
 from app.main import app
+from app.models import MetricResult
 
 
 client = TestClient(app)
@@ -107,3 +109,34 @@ def test_unknown_fields_are_rejected() -> None:
 def test_missing_or_wrongly_typed_fields_are_rejected(payload: dict) -> None:
     response = client.post("/v1/demo/metrics", json=payload)
     assert response.status_code == 422
+
+
+def valid_metric_result(**overrides: object) -> dict[str, object]:
+    return {
+        "metric": "revenue",
+        "value": 205100.0,
+        "unit": "USD",
+        "period": "2026-Q2",
+        "source": "checked-in synthetic fixture",
+        "definition": "Synthetic gross revenue for the selected quarter.",
+        "freshness": "synthetic_fixture",
+        "is_synthetic": True,
+        "warning": "Synthetic data only; not for business decisions.",
+        **overrides,
+    }
+
+
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"metric": "revenue", "unit": "customers"},
+        {"metric": "active_customers", "unit": "USD"},
+        {"metric": "conversion_rate", "value": 100.01, "unit": "percent"},
+        {"source": "   "},
+        {"definition": ""},
+        {"warning": "  "},
+    ],
+)
+def test_metric_result_rejects_semantically_invalid_data(overrides: dict[str, object]) -> None:
+    with pytest.raises(ValidationError):
+        MetricResult.model_validate(valid_metric_result(**overrides))
