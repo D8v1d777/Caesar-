@@ -1,11 +1,12 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { fetchDemoMetric, type DemoMetricName, type DemoMetricResult, type DemoPeriod } from "./api";
 import { canApproveProposal, getProposalApprovalKey, type ApprovalSnapshot } from "./proposalApproval";
 import { initialVoiceSessionState, transitionVoiceSession, type VoiceSessionState } from "./voiceSession";
+import { getLocalSpeechStatus, startLocalAudioCapture, transcribeLocalWav, type LocalAudioCapture } from "./localVoice";
 import {
   Activity, ArrowUpRight, AudioLines, BarChart3, Bell, BookOpen,
   Check, ChevronDown, ChevronRight, CircleHelp, Clock3, Command, FileChartColumn,
-  Gauge, LayoutDashboard, LockKeyhole, Mic, MoreHorizontal, Plus,
+  Gauge, LayoutDashboard, LockKeyhole, Mic, MicOff, MoreHorizontal, Plus,
   Presentation, Search, Settings2, ShieldCheck, Sparkles, TrendingUp, X
 } from "lucide-react";
 
@@ -40,6 +41,8 @@ function MiniChart({ values = sales }: { values?: number[] }) {
 export default function App() {
   const [active, setActive] = useState<View>("Overview");
   const [voiceState, setVoiceState] = useState<VoiceSessionState>(initialVoiceSessionState);
+  const voiceCaptureRef = useRef<LocalAudioCapture | null>(null);
+  const voiceOperationRef = useRef(false);
   const [query, setQuery] = useState("");
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [notice, setNotice] = useState("Ready when you are.");
@@ -54,6 +57,12 @@ export default function App() {
 
   const proposalApprovalSnapshot: ApprovalSnapshot | null = proposal ? { title: proposal.title, detail: proposal.detail, chart: proposal.chart, reason: proposal.reason, metricResult: proposal.metricResult ?? null } : null;
   const approved = proposalApprovalSnapshot !== null && approvedProposalKey === getProposalApprovalKey(proposalApprovalSnapshot);
+
+  useEffect(() => () => {
+    const activeCapture = voiceCaptureRef.current;
+    voiceCaptureRef.current = null;
+    if (activeCapture) void activeCapture.cancel();
+  }, []);
 
   const greeting = useMemo(() => {
     const h = new Date().getHours();
@@ -71,6 +80,7 @@ export default function App() {
       ...(metricResult ? { metricResult } : {}),
     });
     setApprovedProposalKey(null);
+    setVoiceState(current => transitionVoiceSession(current, { type: "dismiss_transcript" }));
     setActive("Create");
     setNotice("Proposal ready for your review. Nothing has changed on the presentation yet.");
   }
@@ -87,6 +97,94 @@ export default function App() {
       setNotice(error instanceof Error ? error.message : "Synthetic API request failed.");
     } finally {
       setApiBusy(false);
+    }
+  }
+
+  async function startVoiceInput() {
+    if (voiceOperationRef.current || voiceCaptureRef.current) return;
+    voiceOperationRef.current = true;
+
+    try {
+      if (window.location.origin !== "http://127.0.0.1:5173") {
+        setVoiceState(current => transitionVoiceSession(current, { type: "runtime_missing" }));
+        setNotice("Voice input is restricted to the loopback prototype at http://127.0.0.1:5173. No microphone permission was requested.");
+        return;
+      }
+
+      setNotice("Checking the local speech runtime. Microphone permission has not been requested.");
+      const status = await getLocalSpeechStatus();
+      if (!status.available) {
+        setVoiceState(current => transitionVoiceSession(current, { type: "runtime_missing" }));
+        setNotice(status.message);
+        return;
+      }
+
+      let base = voiceState;
+      if (base.status === "transcript_ready") {
+        base = transitionVoiceSession(base, { type: "dismiss_transcript" });
+      }
+      if (base.status === "unavailable") {
+        base = transitionVoiceSession(base, { type: "runtime_ready" });
+      }
+      const requesting = transitionVoiceSession(base, { type: "start_requested" });
+      if (requesting.status !== "requesting_permission") {
+        setNotice("Voice session could not start from its current state. Please retry.");
+        return;
+      }
+      setVoiceState(requesting);
+
+      const capture = await startLocalAudioCapture(() => { void stopVoiceInput(); });
+      voiceCaptureRef.current = capture;
+      setVoiceState(current => transitionVoiceSession(current, { type: "permission_granted" }));
+      setNotice("Recording active · processed locally. Press the microphone button again to stop and transcribe.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Local voice capture could not start.";
+      setVoiceState(current => transitionVoiceSession(current, { type: "permission_denied", message }));
+      setNotice(message);
+    } finally {
+      voiceOperationRef.current = false;
+    }
+  }
+
+  async function stopVoiceInput() {
+    if (voiceOperationRef.current) return;
+    const capture = voiceCaptureRef.current;
+    if (!capture) return;
+    voiceOperationRef.current = true;
+    voiceCaptureRef.current = null;
+    setVoiceState(current => transitionVoiceSession(current, { type: "audio_stopped" }));
+    setNotice("Transcribing locally. Audio is not sent to a cloud provider.");
+
+    try {
+      const wav = await capture.stop();
+      const result = await transcribeLocalWav(wav);
+      setQuery(result.transcript);
+      setVoiceState(current => transitionVoiceSession(current, {
+        type: "transcription_succeeded",
+        transcript: result.transcript,
+      }));
+      setNotice("Local transcript ready. Review or edit it before creating a proposal.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Local transcription failed.";
+      setVoiceState(current => transitionVoiceSession(current, { type: "transcription_failed", message }));
+      setNotice(message);
+    } finally {
+      voiceOperationRef.current = false;
+    }
+  }
+
+  async function cancelVoiceInput() {
+    if (voiceOperationRef.current) return;
+    const capture = voiceCaptureRef.current;
+    if (!capture) return;
+    voiceOperationRef.current = true;
+    voiceCaptureRef.current = null;
+    try {
+      await capture.cancel();
+      setVoiceState(current => transitionVoiceSession(current, { type: "cancel" }));
+      setNotice("Voice input cancelled. In-memory audio was discarded.");
+    } finally {
+      voiceOperationRef.current = false;
     }
   }
 
@@ -125,10 +223,10 @@ export default function App() {
           <section className="welcome-row"><div><div className="eyebrow"><span className="eyebrow-line"/> YOUR CREATIVE COMMAND CENTER</div><h1>{greeting}. Let's make<br/>something <em>remarkable.</em></h1><p className="subheading">Turn a thought into a clear, data-grounded presentation. You stay in control at every step.</p></div><div className="date-chip"><Clock3 size={14}/> Live workspace <span className="live-dot"/></div></section>
           <section className="copilot-panel">
             <div className="copilot-orb"><AudioLines size={25}/><span className="orb-ring ring-one"/><span className="orb-ring ring-two"/></div>
-            <div className="copilot-content"><div className="copilot-heading"><div><span className="status-pill"><span className="live-dot"/> COPILOT READY</span><h2>What are we working on?</h2></div><span className="shortcut"><Command size={12}/> K</span></div><p>Describe the story you want your audience to see. Caesar will prepare a proposal for your approval. Local voice input is not connected in this prototype.</p>
+            <div className="copilot-content"><div className="copilot-heading"><div><span className="status-pill"><span className="live-dot"/> COPILOT READY</span><h2>What are we working on?</h2></div><span className="shortcut"><Command size={12}/> K</span></div><p>Describe the story you want your audience to see. Caesar will prepare a proposal for your approval. Local voice input is available only when the verified local runtime is configured; no cloud transcription fallback is used.</p>
               <form className="prompt-box" onSubmit={e => { e.preventDefault(); draftProposal(); }}>
                 <textarea value={query} onChange={e => setQuery(e.target.value)} placeholder="e.g. Show our quarterly revenue trend and highlight the biggest change…" rows={2} aria-label="Describe the presentation you want"/>
-                <div className="prompt-bottom"><span><LockKeyhole size={13}/> Private by design · demo data only</span><div className="prompt-buttons"><button type="button" className="mic-button unavailable" onClick={() => {const next = transitionVoiceSession(voiceState, { type: "start_requested" }); setVoiceState(next); setNotice("Local voice input is unavailable in this browser prototype. No microphone permission was requested and no audio was captured; Caesar will not fall back to cloud transcription.");}} aria-label="Voice input unavailable" title="Local speech engine not connected"><Mic size={16}/></button><span className="voice-offline-label">VOICE OFFLINE</span><button type="submit" className="primary-button">Create proposal <ArrowUpRight size={15}/></button></div></div>
+                <div className="prompt-bottom"><span><LockKeyhole size={13}/> Private by design · demo data only</span><div className="prompt-buttons"><button type="button" className={`mic-button ${voiceState.status === "listening" ? "recording" : voiceState.status === "unavailable" ? "unavailable" : voiceState.status === "error" ? "voice-error" : ""}`} onClick={() => {void (voiceState.status === "listening" ? stopVoiceInput() : startVoiceInput());}} disabled={voiceState.status === "requesting_permission" || voiceState.status === "transcribing"} aria-label={voiceState.status === "listening" ? "Stop and transcribe locally" : "Start local voice input"} title={voiceState.status === "listening" ? "Stop and transcribe locally" : "Start local voice input"}>{voiceState.status === "listening" ? <MicOff size={16}/> : <Mic size={16}/>}</button><span className={`voice-offline-label ${voiceState.status === "listening" || voiceState.status === "transcript_ready" ? "active" : voiceState.status === "error" ? "error" : ""}`} aria-live="polite">{voiceState.status === "unavailable" ? "VOICE OFFLINE" : voiceState.status === "requesting_permission" ? "REQUESTING MIC" : voiceState.status === "listening" ? "LISTENING" : voiceState.status === "transcribing" ? "LOCAL TRANSCRIPTION" : voiceState.status === "transcript_ready" ? "TRANSCRIPT READY" : voiceState.status === "error" ? "VOICE ERROR" : "VOICE READY"}</span>{voiceState.status === "listening" && <button type="button" className="voice-cancel-button" onClick={() => {void cancelVoiceInput();}}>Cancel</button><button type="submit" className="primary-button">Create proposal <ArrowUpRight size={15}/></button></div></div>
               </form>
               <div className="suggestions"><span>TRY A STARTER</span>{["Quarterly revenue story", "Executive project update", "Customer growth snapshot"].map(s=><button key={s} onClick={() => {setQuery(s);draftProposal(s)}}>{s}<ArrowUpRight size={12}/></button>)}</div>
             </div>
@@ -151,7 +249,7 @@ export default function App() {
 
         {active === "Templates" && <section className="subpage"><div className="eyebrow">START WITH A STRONG STORY</div><h1>Good structure. <em>Great clarity.</em></h1><p className="subheading">Original starter directions for the stories teams tell most often.</p><div className="template-grid">{[{name:"The executive brief",type:"DECISION-MAKING",desc:"One headline, three signals, one clear next step.",style:"template-dark"},{name:"The growth story",type:"PERFORMANCE",desc:"A grounded trend, its context, and the question it raises.",style:"template-green"},{name:"The project pulse",type:"TEAM UPDATE",desc:"Progress, risk, and decisions needed from stakeholders.",style:"template-paper"}].map((t,i)=><button className="template-card" key={t.name} onClick={()=>{setQuery(t.name);setProposal({title:t.name,detail:t.desc,chart:"Template preview · synthetic dataset",reason:"This is an original starter concept, not a connected data source."});setApprovedProposalKey(null);setActive("Create");}}><div className={`template-art ${t.style}`}><span className="art-kicker">CAESAR / {String(i+1).padStart(2,"0")}</span><div className="art-lines"><i/><i/><i/></div><MiniChart values={sales.slice(i, i+8)}/></div><span className="eyebrow">{t.type}</span><h3>{t.name}</h3><p>{t.desc}</p><span className="template-open">Use template <ArrowUpRight size={14}/></span></button>)}</div></section>}
 
-        {active === "Tutorial" && <section className="subpage"><div className="eyebrow">THE 3-MINUTE TOUR</div><h1>Meet your new <em>copilot.</em></h1><p className="subheading">A short guided tour of the approval-first workflow.</p><div className="tutorial-layout"><div className="tutorial-steps">{["Start with a thought","Review the proposal","Approve the change","Connect with care"].map((s,i)=><button key={s} className={tutorialStep===i?"tutorial-step selected":"tutorial-step"} onClick={()=>setTutorialStep(i)}><span>{i+1}</span><div><strong>{s}</strong><small>{["Describe the story you need.","Check what Caesar plans to do.","You decide what reaches the canvas.","Review access before connecting data."][i]}</small></div>{tutorialStep===i&&<ChevronRight size={16}/>}</button>)}</div><div className="tutorial-detail"><div className="tutorial-illustration"><div className="tutorial-orb"><AudioLines size={32}/></div><span>STEP 0{tutorialStep+1} / 04</span></div><h2>{["Say what matters.","Nothing happens in the dark.","Your approval is the switch.","Your data deserves boundaries."][tutorialStep]}</h2><p>{["Start with plain language. Caesar can prepare a structured proposal from your request. Voice input remains unavailable until the Windows desktop runtime provides local speech recognition.","Before anything changes, you'll see a summary of the intended action and which data it would use. Ambiguity means ask, not guess.","Approval applies to the exact proposal reviewed. If the content changes, the previous approval is no longer valid.","Integrations will show their publisher, requested permissions, data destination, and controls to test, disable, or revoke access."][tutorialStep]}</p><div className="tutorial-nav"><button className="secondary-button" disabled={tutorialStep===0} onClick={()=>setTutorialStep(Math.max(0,tutorialStep-1))}>Back</button><button className="primary-button" onClick={()=>tutorialStep===3?setActive("Overview"):setTutorialStep(tutorialStep+1)}>{tutorialStep===3?"Finish tour":"Next step"} <ChevronRight size={14}/></button></div></div></div></section>}
+        {active === "Tutorial" && <section className="subpage"><div className="eyebrow">THE 3-MINUTE TOUR</div><h1>Meet your new <em>copilot.</em></h1><p className="subheading">A short guided tour of the approval-first workflow.</p><div className="tutorial-layout"><div className="tutorial-steps">{["Start with a thought","Review the proposal","Approve the change","Connect with care"].map((s,i)=><button key={s} className={tutorialStep===i?"tutorial-step selected":"tutorial-step"} onClick={()=>setTutorialStep(i)}><span>{i+1}</span><div><strong>{s}</strong><small>{["Describe the story you need.","Check what Caesar plans to do.","You decide what reaches the canvas.","Review access before connecting data."][i]}</small></div>{tutorialStep===i&&<ChevronRight size={16}/>}</button>)}</div><div className="tutorial-detail"><div className="tutorial-illustration"><div className="tutorial-orb"><AudioLines size={32}/></div><span>STEP 0{tutorialStep+1} / 04</span></div><h2>{["Say what matters.","Nothing happens in the dark.","Your approval is the switch.","Your data deserves boundaries."][tutorialStep]}</h2><p>{["Start with plain language. Caesar can prepare a structured proposal from your request. Voice input requires an explicitly configured, checksum-verified local speech runtime. The browser prototype never falls back to cloud transcription.","Before anything changes, you'll see a summary of the intended action and which data it would use. Ambiguity means ask, not guess.","Approval applies to the exact proposal reviewed. If the content changes, the previous approval is no longer valid.","Integrations will show their publisher, requested permissions, data destination, and controls to test, disable, or revoke access."][tutorialStep]}</p><div className="tutorial-nav"><button className="secondary-button" disabled={tutorialStep===0} onClick={()=>setTutorialStep(Math.max(0,tutorialStep-1))}>Back</button><button className="primary-button" onClick={()=>tutorialStep===3?setActive("Overview"):setTutorialStep(tutorialStep+1)}>{tutorialStep===3?"Finish tour":"Next step"} <ChevronRight size={14}/></button></div></div></div></section>}
       </div>
       <footer className="statusbar"><span><span className="live-dot"/> {notice}</span><span><LockKeyhole size={12}/> Local demo · No company connection <span className="status-divider"/> <button onClick={()=>setShowHelp(true)}>About this prototype</button></span></footer>
     </main>
