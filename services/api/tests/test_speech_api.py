@@ -1,8 +1,5 @@
 import io
 import wave
-from pathlib import Path
-from subprocess import CompletedProcess
-
 import pytest
 from fastapi.testclient import TestClient
 
@@ -75,7 +72,7 @@ def test_transcription_fails_closed_when_runtime_is_missing(monkeypatch: pytest.
         files={"audio": ("clip.wav", make_wav(), "audio/wav")},
     )
     assert response.status_code == 503
-    assert "No microphone" not in response.json()["detail"]
+    assert "Local speech is not configured" in response.json()["detail"]
 
 
 def test_transcription_returns_local_only_contract(monkeypatch: pytest.MonkeyPatch) -> None:
