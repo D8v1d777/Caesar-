@@ -15,7 +15,7 @@ Caesar is a privacy-first, voice-driven presentation copilot. It helps people tu
 
 ## Status
 
-This repository contains an **early interactive prototype and API contract spike**, not a production application. The Windows prototype is a React/TypeScript web app; the FastAPI service serves fixed synthetic metrics. CI builds the frontend and runs the API tests. The microphone, proposal approval, and integration controls are simulated local UI state. The frontend can request an allowlisted synthetic metric and carry its validated value and provenance into a proposal; approval remains a browser-local stale-content guard, not server authorization. There is no Tauri desktop shell, speech recognition, model orchestration, authentication, live database, or real connector.
+This repository contains an **early interactive prototype and API contract spike**, not a production application. The Windows prototype is a React/TypeScript web app; the FastAPI service serves fixed synthetic metrics. CI builds the frontend and runs the API tests. The proposal approval and integration controls are simulated local UI state. The browser prototype now marks voice input unavailable instead of pretending to listen; no microphone capture or speech recognition is implemented. The frontend can request an allowlisted synthetic metric and carry its validated value and provenance into a proposal; approval remains a browser-local stale-content guard, not server authorization. There is no Tauri desktop shell, speech recognition, model orchestration, authentication, live database, or real connector.
 
 ## Start here
 
@@ -28,6 +28,7 @@ This repository contains an **early interactive prototype and API contract spike
 7. Roadmap: [docs/roadmap/ROADMAP.md](docs/roadmap/ROADMAP.md)
 8. Design decision record: [docs/superpowers/specs/2026-10-23-caesar-foundation-design.md](docs/superpowers/specs/2026-10-23-caesar-foundation-design.md)
 9. Developer implementation plan: [docs/superpowers/plans/2026-10-23-caesar-foundation.md](docs/superpowers/plans/2026-10-23-caesar-foundation.md)
+10. Local speech integration contract: [docs/architecture/local-speech-integration.md](docs/architecture/local-speech-integration.md)
 
 ## Proposed first-release architecture
 
@@ -57,7 +58,7 @@ These are proposed technology choices, not evidence of a working implementation.
 |---|---|---|
 | Windows UI | Interactive React/TypeScript prototype | Runs in a browser; no Tauri shell yet |
 | Proposal/approval flow | Simulated local UI state with content-bound stale-approval guard | Not authorization, durable approval, or an audit record |
-| Microphone / speech | UI indicator only | No audio capture or speech recognition |
+| Microphone / speech | Voice control reports unavailable until the local runtime exists | No audio capture or speech recognition |
 | API | FastAPI synthetic-data contract | No authentication, tenant isolation, or live data |
 | Data provenance | Validated synthetic API response fields | Values can be carried into proposals and displayed with provenance; still synthetic only |
 | Integrations | Local demo toggles plus synthetic API test | No connector is installed and no external service is contacted |
