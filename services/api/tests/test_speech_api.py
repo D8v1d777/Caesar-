@@ -39,13 +39,14 @@ def test_status_reports_unconfigured_runtime_without_exposing_paths(monkeypatch:
     assert "C:\\" not in body["message"]
 
 
-def test_transcription_rejects_non_loopback_origin() -> None:
+def test_transcription_rejects_non_loopback_origin_before_multipart_parsing() -> None:
     response = client.post(
         "/v1/local/speech/transcribe",
         headers={"origin": "https://example.com"},
         files={"audio": ("clip.wav", make_wav(), "audio/wav")},
     )
     assert response.status_code == 403
+    assert response.json()["detail"] == "Local transcription accepts audio only from the loopback Caesar prototype UI."
 
 
 def test_transcription_rejects_wrong_audio_content_type() -> None:
@@ -112,3 +113,17 @@ def test_non_loopback_client_is_denied(monkeypatch: pytest.MonkeyPatch) -> None:
     remote_client = TestClient(app, client=("203.0.113.15", 50000))
     response = remote_client.get("/v1/local/speech/status")
     assert response.status_code == 403
+
+
+
+def test_transcription_rejects_excessive_declared_request_size_before_parsing() -> None:
+    response = client.post(
+        "/v1/local/speech/transcribe",
+        headers={
+            "origin": ORIGIN,
+            "content-type": "multipart/form-data; boundary=not-parsed",
+            "content-length": str(speech.MAX_AUDIO_BYTES + 65_537),
+        },
+        content=b"this body should be rejected before multipart parsing",
+    )
+    assert response.status_code == 413
