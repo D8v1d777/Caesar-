@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import {
-  Activity, ArrowDownRight, ArrowUpRight, AudioLines, BarChart3, Bell, BookOpen,
-  Check, ChevronDown, ChevronRight, CircleHelp, Clock3, Command, Database, FileChartColumn,
-  FileText, Gauge, LayoutDashboard, LockKeyhole, Mic, MicOff, MoreHorizontal, Plus,
+  Activity, ArrowUpRight, AudioLines, BarChart3, Bell, BookOpen,
+  Check, ChevronDown, ChevronRight, CircleHelp, Clock3, Command, FileChartColumn,
+  Gauge, LayoutDashboard, LockKeyhole, Mic, MicOff, MoreHorizontal, Plus,
   Presentation, Search, Settings2, ShieldCheck, Sparkles, TrendingUp, X
 } from "lucide-react";
 
