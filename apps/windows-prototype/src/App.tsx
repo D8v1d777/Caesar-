@@ -139,7 +139,12 @@ export default function App() {
       setNotice("Recording active · processed locally. Press the microphone button again to stop and transcribe.");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Local voice capture could not start.";
-      setVoiceState(current => transitionVoiceSession(current, { type: "permission_denied", message }));
+      setVoiceState(current => {
+        const ready = current.status === "unavailable"
+          ? transitionVoiceSession(current, { type: "runtime_ready" })
+          : current;
+        return transitionVoiceSession(ready, { type: "permission_denied", message });
+      });
       setNotice(message);
     } finally {
       voiceOperationRef.current = false;
