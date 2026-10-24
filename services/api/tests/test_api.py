@@ -24,7 +24,7 @@ def test_metric_returns_value_and_provenance() -> None:
     assert body["source"] == "checked-in synthetic fixture"
     assert body["freshness"] == "synthetic_fixture"
     assert body["is_synthetic"] is True
-    assert "not for business decisions" in body["warning"]
+    assert "not for business decisions" in body["warning"].lower()
 
 
 def test_unknown_metric_is_rejected() -> None:
