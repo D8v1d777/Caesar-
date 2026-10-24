@@ -59,7 +59,7 @@ These are proposed technology choices, not evidence of a working implementation.
 | Proposal/approval flow | Simulated local UI state | Not authorization, durable approval, or an audit record |
 | Microphone / speech | UI indicator only | No audio capture or speech recognition |
 | API | FastAPI synthetic-data contract | No authentication, tenant isolation, or live data |
-| Data provenance | Synthetic API response fields | UI does not yet consume or display API responses |
+| Data provenance | Synthetic API response fields | Integrations screen can test the local API and display provenance; proposal flow is still simulated |
 | Integrations | Local demo toggles | No connector is installed and no external service is contacted |
 | AI/model orchestration | Not implemented | Prompts do not invoke a model |
 | Export / Android | Not implemented | Planned follow-on work |
