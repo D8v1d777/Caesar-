@@ -35,7 +35,8 @@ def test_status_reports_unconfigured_runtime_without_exposing_paths(monkeypatch:
     body = response.json()
     assert body["available"] is False
     assert body["reason"] == "not_configured"
-    assert "CAESAR_WHISPER_CPP_PATH" in body["message"]
+    assert "Local speech is not configured" in body["message"]
+    assert "No microphone was activated" in body["message"]
     assert "C:\\" not in body["message"]
 
 
