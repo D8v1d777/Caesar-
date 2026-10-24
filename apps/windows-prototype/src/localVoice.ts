@@ -158,7 +158,7 @@ export async function startLocalAudioCapture(
     throw new Error("Local microphone capture could not be initialized.");
   }
 
-  const sourceSampleRate = context.sampleRate;
+  const sourceSampleRate = context?.sampleRate ?? TARGET_SAMPLE_RATE;
   let stopPromise: Promise<Blob> | null = null;
 
   const cleanup = async () => {
