@@ -27,14 +27,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install
-      - name: Export generated lockfile for deterministic commit
-        shell: bash
-        run: |
-          echo "CAESAR_LOCKFILE_BASE64_BEGIN"
-          base64 -w0 package-lock.json
-          echo
-          echo "CAESAR_LOCKFILE_BASE64_END"
+      - run: npm ci
       - run: npm audit --audit-level=high
       - run: npm run build
       - run: npm test
