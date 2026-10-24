@@ -5,7 +5,7 @@ import { initialVoiceSessionState, transitionVoiceSession, type VoiceSessionStat
 import { getLocalSpeechStatus, startLocalAudioCapture, transcribeLocalWav, type LocalAudioCapture } from "./localVoice";
 import {
   Activity, ArrowUpRight, AudioLines, BarChart3, Bell, BookOpen,
-  Check, ChevronDown, ChevronRight, CircleHelp, Clock3, Command, FileChartColumn,
+  Check, ChevronDown, ChevronRight, CircleHelp, Command, FileChartColumn,
   Gauge, LayoutDashboard, LockKeyhole, Mic, MicOff, MoreHorizontal, Plus,
   Presentation, Search, Settings2, ShieldCheck, Sparkles, TrendingUp, X
 } from "lucide-react";
@@ -30,12 +30,36 @@ function MiniChart({ values = sales }: { values?: number[] }) {
   const max = Math.max(...values);
   const points = values.map((v, i) => `${(i / (values.length - 1)) * 300},${100 - (v / max) * 82}`).join(" ");
   return <svg className="mini-chart" viewBox="0 0 300 110" role="img" aria-label="Illustrative monthly revenue trend">
-    <defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#b9f27c" stopOpacity=".24"/><stop offset="100%" stopColor="#b9f27c" stopOpacity="0"/></linearGradient></defs>
+    <defs><linearGradient id="area" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#c9aa70" stopOpacity=".24"/><stop offset="100%" stopColor="#c9aa70" stopOpacity="0"/></linearGradient></defs>
     {[20, 45, 70, 95].map(y => <line key={y} x1="0" x2="300" y1={y} y2={y} stroke="currentColor" opacity=".08" />)}
     <polygon points={`0,110 ${points} 300,110`} fill="url(#area)" />
-    <polyline points={points} fill="none" stroke="#b9f27c" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
-    {values.map((v, i) => <circle key={i} cx={(i / (values.length - 1)) * 300} cy={100 - (v / max) * 82} r={i === values.length - 1 ? 4 : 0} fill="#b9f27c" />)}
+    <polyline points={points} fill="none" stroke="#c9aa70" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+    {values.map((v, i) => <circle key={i} cx={(i / (values.length - 1)) * 300} cy={100 - (v / max) * 82} r={i === values.length - 1 ? 4 : 0} fill="#c9aa70" />)}
   </svg>;
+}
+
+function CaesarSigil() {
+  return <svg className="caesar-sigil" viewBox="0 0 36 36" aria-hidden="true">
+    <path d="M10 29C5.9 25.6 4.5 20.7 5.8 15.4 6.5 12 8.1 9.1 10.8 6.8" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/>
+    <path d="M26 29c4.1-3.4 5.5-8.3 4.2-13.6-.7-3.4-2.3-6.3-5-8.6" fill="none" stroke="currentColor" strokeWidth="1.25" strokeLinecap="round"/>
+    <path d="M7.2 23.7l5-1.5M6.1 17.6l5.1.4M8.4 11.6l4.1 2.6M28.8 23.7l-5-1.5m6.1-4.6-5.1.4m2.3-6.4-4.1 2.6" fill="none" stroke="currentColor" strokeWidth="1.15" strokeLinecap="round"/>
+    <text x="18" y="23" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontSize="19" fontWeight="700" fill="currentColor">C</text>
+  </svg>;
+}
+
+function ImperialWatermark() {
+  return <div className="imperial-watermark" aria-hidden="true">
+    <svg viewBox="0 0 280 190" fill="none">
+      <path d="M22 171V79C22 37 72 10 140 10s118 27 118 69v92" stroke="currentColor" strokeWidth="1.2"/>
+      <path d="M39 171V83c0-34 43-59 101-59s101 25 101 59v88" stroke="currentColor" strokeWidth=".7"/>
+      <path d="M48 67h184M48 72h184M47 159h186M42 165h196M35 171h210" stroke="currentColor" strokeWidth=".8"/>
+      <path d="M71 78v80m7-80v80m-11-80h15m-18-5h21m-22 90h23M107 78v80m7-80v80m-11-80h15m-18-5h21m-22 90h23M166 78v80m7-80v80m-11-80h15m-18-5h21m-22 90h23M202 78v80m7-80v80m-11-80h15m-18-5h21m-22 90h23" stroke="currentColor" strokeWidth=".7"/>
+      <circle cx="140" cy="109" r="27" stroke="currentColor" strokeWidth="1"/>
+      <circle cx="140" cy="109" r="22" stroke="currentColor" strokeWidth=".6"/>
+      <text x="140" y="117" textAnchor="middle" fontFamily="Georgia, 'Times New Roman', serif" fontSize="28" fill="currentColor">C</text>
+      <text x="140" y="185" textAnchor="middle" fontFamily="'Courier New', monospace" fontSize="7" letterSpacing="1.8" fill="currentColor">SPEAK · SHAPE · PRESENT</text>
+    </svg>
+  </div>;
 }
 
 export default function App() {
@@ -203,8 +227,8 @@ export default function App() {
   return <div className="app-shell">
     <aside className="sidebar">
       <button className="brand" onClick={() => setActive("Overview")} aria-label="Caesar home">
-        <span className="brand-mark"><AudioLines size={21} strokeWidth={2.2}/></span>
-        <span><strong>caesar</strong><small>WORKSPACE</small></span>
+        <span className="brand-mark"><CaesarSigil /></span>
+        <span><strong>CAESAR</strong><small>VOICE · PRESENTATION</small></span>
       </button>
       <div className="workspace-picker"><div className="workspace-avatar">N</div><div className="workspace-copy"><strong>Northstar Studio</strong><span>Personal workspace</span></div><ChevronDown size={15}/></div>
       <div className="nav-label">WORKSPACE</div>
@@ -221,11 +245,11 @@ export default function App() {
     </aside>
 
     <main className="main">
-      <header className="topbar"><div className="breadcrumbs"><span>Workspace</span><ChevronRight size={14}/><strong>{active}</strong></div><div className="top-actions"><span className="environment"><span className="live-dot"/> SYNTHETIC ENVIRONMENT</span><button className="icon-button" title="Search" onClick={() => setNotice("Search is planned; no content is indexed in this prototype.")}><Search size={17}/></button><button className="icon-button" title="Notifications" onClick={() => setNotice("You're all caught up.")}><Bell size={17}/></button><button className="avatar-small" aria-label="Profile">V</button></div></header>
+      <header className="topbar"><div className="breadcrumbs"><span>Workspace</span><ChevronRight size={14}/><strong>{active}</strong></div><div className="top-actions"><span className="environment"><span className="live-dot"/> SYNTHETIC DATA / DEMO</span><button className="icon-button" title="Search" onClick={() => setNotice("Search is planned; no content is indexed in this prototype.")}><Search size={17}/></button><button className="icon-button" title="Notifications" onClick={() => setNotice("You're all caught up.")}><Bell size={17}/></button><button className="avatar-small" aria-label="Profile">V</button></div></header>
 
       <div className="page-content">
         {active === "Overview" && <>
-          <section className="welcome-row"><div><div className="eyebrow"><span className="eyebrow-line"/> YOUR CREATIVE COMMAND CENTER</div><h1>{greeting}. Let's make<br/>something <em>remarkable.</em></h1><p className="subheading">Turn a thought into a clear, data-grounded presentation. You stay in control at every step.</p></div><div className="date-chip"><Clock3 size={14}/> Live workspace <span className="live-dot"/></div></section>
+          <section className="welcome-row"><div><div className="eyebrow"><span className="eyebrow-line"/> {greeting.toUpperCase()} · THE ART OF THE CLEAR STORY</div><h1>Make your next<br/>story <em>unforgettable.</em></h1><p className="subheading">Turn a thought into a clear, data-grounded presentation. You stay in control at every step.</p></div><ImperialWatermark /><div className="date-chip"><ShieldCheck size={14}/> APPROVAL-FIRST <span className="live-dot"/></div></section>
           <section className="copilot-panel">
             <div className="copilot-orb"><AudioLines size={25}/><span className="orb-ring ring-one"/><span className="orb-ring ring-two"/></div>
             <div className="copilot-content"><div className="copilot-heading"><div><span className="status-pill"><span className="live-dot"/> COPILOT READY</span><h2>What are we working on?</h2></div><span className="shortcut"><Command size={12}/> K</span></div><p>Describe the story you want your audience to see. Caesar will prepare a proposal for your approval. Local voice input is available only when the verified local runtime is configured; no cloud transcription fallback is used.</p>
