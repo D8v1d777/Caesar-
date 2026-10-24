@@ -15,7 +15,7 @@ Caesar is a privacy-first, voice-driven presentation copilot. It helps people tu
 
 ## Status
 
-This repository is a **product and engineering foundation**. The current baseline contains the MIT license and project documentation; the application scaffold and runtime features have not yet been implemented. See the roadmap and implementation plan before claiming any capability is working.
+This repository contains an **early interactive prototype and API contract spike**, not a production application. The Windows prototype is a React/TypeScript web app; the FastAPI service serves fixed synthetic metrics. CI builds the frontend and runs the API tests. The prototype's microphone, proposal approval, and integration controls are simulated local UI state. The frontend is not connected to the API, and there is no Tauri desktop shell, speech recognition, model orchestration, authentication, live database, or real connector. See the implementation status below and the roadmap before claiming any capability is production-ready.
 
 ## Start here
 
@@ -51,6 +51,19 @@ These are proposed technology choices, not evidence of a working implementation.
 - Add tests with every behavior change and document any deviation from the spec.
 - Never mark a feature complete without recorded verification evidence.
 
-## Development status
+## Current implementation status
 
-See [ROADMAP.md](docs/roadmap/ROADMAP.md). No UI, backend, plugin marketplace, Android client, or AI feature should be represented as implemented until code and tests demonstrate it.
+| Area | Current state | Important boundary |
+|---|---|---|
+| Windows UI | Interactive React/TypeScript prototype | Runs in a browser; no Tauri shell yet |
+| Proposal/approval flow | Simulated local UI state | Not authorization, durable approval, or an audit record |
+| Microphone / speech | UI indicator only | No audio capture or speech recognition |
+| API | FastAPI synthetic-data contract | No authentication, tenant isolation, or live data |
+| Data provenance | Synthetic API response fields | UI does not yet consume or display API responses |
+| Integrations | Local demo toggles | No connector is installed and no external service is contacted |
+| AI/model orchestration | Not implemented | Prompts do not invoke a model |
+| Export / Android | Not implemented | Planned follow-on work |
+
+CI passing means the current frontend build and API test suite pass; it does **not** mean the product workflows above are implemented end to end.
+
+See [ROADMAP.md](docs/roadmap/ROADMAP.md) for the sequence and acceptance gates. Do not connect real company data or expose the API beyond loopback until the required identity, authorization, tenant isolation, and security controls have been implemented and reviewed.
