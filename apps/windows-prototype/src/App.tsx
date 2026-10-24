@@ -5,7 +5,7 @@ import { initialVoiceSessionState, transitionVoiceSession, type VoiceSessionStat
 import { getLocalSpeechStatus, startLocalAudioCapture, transcribeLocalWav, type LocalAudioCapture } from "./localVoice";
 import {
   Activity, ArrowUpRight, AudioLines, BarChart3, Bell, BookOpen,
-  Check, ChevronDown, ChevronRight, CircleHelp, Clock3, Command, FileChartColumn,
+  Check, ChevronDown, ChevronRight, CircleHelp, Command, FileChartColumn,
   Gauge, LayoutDashboard, LockKeyhole, Mic, MicOff, MoreHorizontal, Plus,
   Presentation, Search, Settings2, ShieldCheck, Sparkles, TrendingUp, X
 } from "lucide-react";
