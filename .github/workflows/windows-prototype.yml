@@ -1,0 +1,31 @@
+name: Windows prototype checks
+
+on:
+  pull_request:
+    paths:
+      - "apps/windows-prototype/**"
+      - ".github/workflows/windows-prototype.yml"
+  push:
+    branches: ["main", "feat/windows-prototype-approval-loop"]
+    paths:
+      - "apps/windows-prototype/**"
+      - ".github/workflows/windows-prototype.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/windows-prototype
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/windows-prototype/package.json
+      - run: npm install
+      - run: npm run build
