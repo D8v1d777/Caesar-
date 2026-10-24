@@ -8,35 +8,9 @@ Caesar is a privacy-first, voice-driven presentation copilot. It helps people tu
 
 Its visual identity takes cues from Roman editorial design: architectural structure, classical typography, antique brass, warm stone, and a measured oxblood accent. The result is confident and recognisable without turning the product into a costume.
 
-<p align="left">
-  <a href="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp"><img src="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp" alt="Classical marble portrait looking toward the light" width="112" hspace="22" vspace="26" /></a>
-</p>
-<p align="right">
-  <a href="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp" alt="Full-length classical marble figure in layered drapery" width="96" hspace="68" vspace="34" /></a>
-</p>
-<p align="center">
-  <a href="apps/windows-prototype/public/images/caesar-statues/profile-study.webp"><img src="apps/windows-prototype/public/images/caesar-statues/profile-study.webp" alt="Side view of a carved marble figure with curled hair" width="108" hspace="12" vspace="24" /></a>
-</p>
-<p align="left">
-  <a href="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp"><img src="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp" alt="Full-length marble figure framed by tall windows" width="104" hspace="84" vspace="32" /></a>
-</p>
-<p align="right">
-  <a href="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp"><img src="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp" alt="Marble profile turned toward warm gallery light" width="120" hspace="28" vspace="28" /></a>
-</p>
-<p align="center">
-  <a href="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp" alt="Draped marble figure holding a lyre" width="92" hspace="76" vspace="36" /></a>
-</p>
-<p align="left">
-  <a href="apps/windows-prototype/public/images/caesar-statues/laurel-gaze.webp"><img src="apps/windows-prototype/public/images/caesar-statues/laurel-gaze.webp" alt="Marble portrait wearing a laurel wreath" width="110" hspace="42" vspace="30" /></a>
-</p>
-<p align="right">
-  <a href="apps/windows-prototype/public/images/caesar-statues/standing-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/standing-muse.webp" alt="Standing marble figure beside stone columns" width="116" hspace="74" vspace="34" /></a>
-</p>
-<p align="center">
-  <a href="apps/windows-prototype/public/images/caesar-statues/contemplative-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/contemplative-muse.webp" alt="Contemplative marble figure with lowered head" width="100" hspace="18" vspace="26" /></a>
-</p>
-
 ## Product principles
+
+<p align="right"><img src="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp" alt="Classical marble portrait looking toward the light" width="112" /></p>
 
 - **Windows first, Android second.** The first production client targets Windows desktop. Android is a planned follow-on client, not a launch blocker.
 - **Hybrid interaction.** Caesar listens only when enabled, understands context, and proposes useful actions. It does not change the visible presentation until the presenter approves.
@@ -47,9 +21,13 @@ Its visual identity takes cues from Roman editorial design: architectural struct
 
 ## Status
 
+<p align="left"><img src="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp" alt="Full-length classical marble figure in layered drapery" width="96" /></p>
+
 This repository contains an **early interactive prototype and API contract spike**, not a production application. The Windows prototype is a React/TypeScript web app; the FastAPI service serves fixed synthetic metrics. CI builds the frontend and runs the API tests. The proposal approval and integration controls are simulated local UI state. An optional loopback-only browser voice path can capture a short clip and call a verified local whisper.cpp runtime when the executable and model are explicitly configured; it is disabled by default and has no cloud fallback. The frontend can request an allowlisted synthetic metric and carry its validated value and provenance into a proposal; approval remains a browser-local stale-content guard, not server authorization. The Tauri desktop shell, packaged runtime, model installer, model orchestration, authentication, live database, and real company connectors are not implemented.
 
 ## Start here
+
+<p align="center"><img src="apps/windows-prototype/public/images/caesar-statues/profile-study.webp" alt="Side view of a carved marble figure with curled hair" width="108" /></p>
 
 1. Product requirements: [docs/product/PRD.md](docs/product/PRD.md)
 2. Architecture: [docs/architecture/overview.md](docs/architecture/overview.md)
@@ -64,6 +42,8 @@ This repository contains an **early interactive prototype and API contract spike
 
 ## Proposed first-release architecture
 
+<p align="right"><img src="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp" alt="Full-length marble figure framed by tall windows" width="104" /></p>
+
 - Windows desktop client: Tauri 2 + React + TypeScript, subject to a short architecture spike.
 - Company-controlled processing API: Python + FastAPI.
 - Local speech recognition: whisper.cpp candidate; benchmark on target Windows hardware before committing.
@@ -76,6 +56,8 @@ These are proposed technology choices, not evidence of a working implementation.
 
 ## Team rules
 
+<p align="left"><img src="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp" alt="Marble profile turned toward warm gallery light" width="120" /></p>
+
 - Read the product, architecture, and security docs before implementing a feature.
 - Never connect real company data during early prototypes; use synthetic data.
 - Do not send audio, transcripts, company data, or credentials to unapproved destinations.
@@ -85,6 +67,8 @@ These are proposed technology choices, not evidence of a working implementation.
 - Never mark a feature complete without recorded verification evidence.
 
 ## Current implementation status
+
+<p align="center"><img src="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp" alt="Draped marble figure holding a lyre" width="92" /></p>
 
 | Area | Current state | Important boundary |
 |---|---|---|
