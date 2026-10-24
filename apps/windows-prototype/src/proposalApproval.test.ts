@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getProposalApprovalKey, type ApprovalSnapshot } from "./proposalApproval";
+import { canApproveProposal, getProposalApprovalKey, type ApprovalSnapshot } from "./proposalApproval";
 
 const base: ApprovalSnapshot = {
   title: "Quarterly revenue",
@@ -36,5 +36,13 @@ describe("getProposalApprovalKey", () => {
     ["metric removal", { ...base, metricResult: null }],
   ])("changes when approved content changes: %s", (_label, changed) => {
     expect(getProposalApprovalKey(changed)).not.toBe(getProposalApprovalKey(base));
+  });
+});
+
+describe("canApproveProposal", () => {
+  it("accepts a non-empty title", () => expect(canApproveProposal("Revenue briefing")).toBe(true));
+  it("rejects empty or whitespace-only titles", () => {
+    expect(canApproveProposal("")).toBe(false);
+    expect(canApproveProposal("   \n  ")).toBe(false);
   });
 });
