@@ -8,22 +8,32 @@ Caesar is a privacy-first, voice-driven presentation copilot. It helps people tu
 
 Its visual identity takes cues from Roman editorial design: architectural structure, classical typography, antique brass, warm stone, and a measured oxblood accent. The result is confident and recognisable without turning the product into a costume.
 
-## The marble canon
-
-<p align="center">
-  <a href="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp"><img src="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp" alt="Classical marble portrait looking toward the light" width="126" /></a>&nbsp;&nbsp;&nbsp;
-  <a href="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp" alt="Full-length classical marble figure in layered drapery" width="108" /></a>&nbsp;&nbsp;&nbsp;
-  <a href="apps/windows-prototype/public/images/caesar-statues/profile-study.webp"><img src="apps/windows-prototype/public/images/caesar-statues/profile-study.webp" alt="Side view of a carved marble figure with curled hair" width="118" /></a>
+<p align="left">
+  <a href="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp"><img src="apps/windows-prototype/public/images/caesar-statues/oracle-gaze.webp" alt="Classical marble portrait looking toward the light" width="112" hspace="22" vspace="26" /></a>
+</p>
+<p align="right">
+  <a href="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/draped-muse.webp" alt="Full-length classical marble figure in layered drapery" width="96" hspace="68" vspace="34" /></a>
 </p>
 <p align="center">
-  <a href="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp"><img src="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp" alt="Full-length marble figure framed by tall windows" width="116" /></a>&nbsp;&nbsp;&nbsp;&nbsp;
-  <a href="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp"><img src="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp" alt="Marble profile turned toward warm gallery light" width="132" /></a>
+  <a href="apps/windows-prototype/public/images/caesar-statues/profile-study.webp"><img src="apps/windows-prototype/public/images/caesar-statues/profile-study.webp" alt="Side view of a carved marble figure with curled hair" width="108" hspace="12" vspace="24" /></a>
+</p>
+<p align="left">
+  <a href="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp"><img src="apps/windows-prototype/public/images/caesar-statues/votive-figure.webp" alt="Full-length marble figure framed by tall windows" width="104" hspace="84" vspace="32" /></a>
+</p>
+<p align="right">
+  <a href="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp"><img src="apps/windows-prototype/public/images/caesar-statues/marble-profile.webp" alt="Marble profile turned toward warm gallery light" width="120" hspace="28" vspace="28" /></a>
 </p>
 <p align="center">
-  <a href="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp" alt="Draped marble figure holding a lyre" width="104" /></a>&nbsp;&nbsp;&nbsp;
-  <a href="apps/windows-prototype/public/images/caesar-statues/laurel-gaze.webp"><img src="apps/windows-prototype/public/images/caesar-statues/laurel-gaze.webp" alt="Marble portrait wearing a laurel wreath" width="122" /></a>&nbsp;&nbsp;&nbsp;
-  <a href="apps/windows-prototype/public/images/caesar-statues/standing-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/standing-muse.webp" alt="Standing marble figure beside stone columns" width="126" /></a>&nbsp;&nbsp;&nbsp;
-  <a href="apps/windows-prototype/public/images/caesar-statues/contemplative-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/contemplative-muse.webp" alt="Contemplative marble figure with lowered head" width="112" /></a>
+  <a href="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/lyre-muse.webp" alt="Draped marble figure holding a lyre" width="92" hspace="76" vspace="36" /></a>
+</p>
+<p align="left">
+  <a href="apps/windows-prototype/public/images/caesar-statues/laurel-gaze.webp"><img src="apps/windows-prototype/public/images/caesar-statues/laurel-gaze.webp" alt="Marble portrait wearing a laurel wreath" width="110" hspace="42" vspace="30" /></a>
+</p>
+<p align="right">
+  <a href="apps/windows-prototype/public/images/caesar-statues/standing-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/standing-muse.webp" alt="Standing marble figure beside stone columns" width="116" hspace="74" vspace="34" /></a>
+</p>
+<p align="center">
+  <a href="apps/windows-prototype/public/images/caesar-statues/contemplative-muse.webp"><img src="apps/windows-prototype/public/images/caesar-statues/contemplative-muse.webp" alt="Contemplative marble figure with lowered head" width="100" hspace="18" vspace="26" /></a>
 </p>
 
 ## Product principles
