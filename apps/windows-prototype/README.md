@@ -30,7 +30,7 @@ Open the local URL printed by Vite (configured to bind to `127.0.0.1:5173`).
 
 - All displayed numbers and charts are illustrative synthetic data.
 - No microphone capture or speech recognition is wired up. The microphone button only demonstrates the UI state.
-- No company data, model provider, database, connector, plugin runtime, PowerPoint export, or authentication service is connected.
+- The Integrations screen can call the local synthetic API through the Vite `/api` proxy and display the returned metric provenance. This is a contract demo only; no company data, model provider, live database, real connector, plugin runtime, PowerPoint export, or authentication service is connected.
 - Proposal state exists only in browser memory. It is not an authorization boundary or durable audit record.
 - This initial scaffold does not include the Tauri/Rust shell yet. Add it after the team validates Windows build prerequisites and the narrow capability/IPC policy.
 

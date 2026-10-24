@@ -15,7 +15,7 @@ Caesar is a privacy-first, voice-driven presentation copilot. It helps people tu
 
 ## Status
 
-This repository contains an **early interactive prototype and API contract spike**, not a production application. The Windows prototype is a React/TypeScript web app; the FastAPI service serves fixed synthetic metrics. CI builds the frontend and runs the API tests. The prototype's microphone, proposal approval, and integration controls are simulated local UI state. The frontend is not connected to the API, and there is no Tauri desktop shell, speech recognition, model orchestration, authentication, live database, or real connector. See the implementation status below and the roadmap before claiming any capability is production-ready.
+This repository contains an **early interactive prototype and API contract spike**, not a production application. The Windows prototype is a React/TypeScript web app; the FastAPI service serves fixed synthetic metrics. CI builds the frontend and runs the API tests. The prototype's microphone, proposal approval, and integration controls are simulated local UI state. The frontend can call one local synthetic metric endpoint from Integrations, but that result is not yet used by the proposal/presentation workflow. There is no Tauri desktop shell, speech recognition, model orchestration, authentication, live database, or real connector. See the implementation status below and the roadmap before claiming any capability is production-ready.
 
 ## Start here
 
@@ -59,7 +59,7 @@ These are proposed technology choices, not evidence of a working implementation.
 | Proposal/approval flow | Simulated local UI state | Not authorization, durable approval, or an audit record |
 | Microphone / speech | UI indicator only | No audio capture or speech recognition |
 | API | FastAPI synthetic-data contract | No authentication, tenant isolation, or live data |
-| Data provenance | Synthetic API response fields | UI does not yet consume or display API responses |
+| Data provenance | Synthetic API response fields | Integrations screen can test the local API and display provenance; proposal flow is still simulated |
 | Integrations | Local demo toggles | No connector is installed and no external service is contacted |
 | AI/model orchestration | Not implemented | Prompts do not invoke a model |
 | Export / Android | Not implemented | Planned follow-on work |
