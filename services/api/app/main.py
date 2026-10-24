@@ -20,7 +20,7 @@ app = FastAPI(
     title="Caesar Synthetic Demo API",
     version="0.1.0",
     description=(
-        "Local-only contract spike. Synthetic fixtures only; no company systems, "
+        "Local contract spike. Synthetic fixtures only; no company systems, "
         "identity provider, or AI model is connected."
     ),
 )
