@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { fetchDemoMetric, type DemoMetricResult } from "./api";
+import { getProposalApprovalKey, type ApprovalSnapshot } from "./proposalApproval";
 import {
   Activity, ArrowUpRight, AudioLines, BarChart3, Bell, BookOpen,
   Check, ChevronDown, ChevronRight, CircleHelp, Clock3, Command, FileChartColumn,
@@ -41,12 +42,15 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [proposal, setProposal] = useState<Proposal | null>(null);
   const [notice, setNotice] = useState("Ready when you are.");
-  const [approved, setApproved] = useState(false);
+  const [approvedProposalKey, setApprovedProposalKey] = useState<string | null>(null);
   const [tutorialStep, setTutorialStep] = useState(0);
   const [installed, setInstalled] = useState<string[]>([]);
   const [showHelp, setShowHelp] = useState(false);
   const [metricResult, setMetricResult] = useState<DemoMetricResult | null>(null);
   const [apiBusy, setApiBusy] = useState(false);
+
+  const proposalApprovalSnapshot: ApprovalSnapshot | null = proposal ? { title: proposal.title, detail: proposal.detail, chart: proposal.chart, reason: proposal.reason, metricResult: proposal.metricResult ?? null } : null;
+  const approved = proposalApprovalSnapshot !== null && approvedProposalKey === getProposalApprovalKey(proposalApprovalSnapshot);
 
   const greeting = useMemo(() => {
     const h = new Date().getHours();
@@ -63,7 +67,7 @@ export default function App() {
       reason: metricResult ? `Source: ${metricResult.source}. ${metricResult.warning}` : "Caesar will use illustrative demo data. No company system is connected.",
       ...(metricResult ? { metricResult } : {}),
     });
-    setApproved(false);
+    setApprovedProposalKey(null);
     setListening(false);
     setActive("Create");
     setNotice("Proposal ready for your review. Nothing has changed on the presentation yet.");
@@ -86,7 +90,7 @@ export default function App() {
 
   function approveProposal() {
     if (!proposal) return;
-    setApproved(true);
+    setApprovedProposalKey(getProposalApprovalKey({ title: proposal.title, detail: proposal.detail, chart: proposal.chart, reason: proposal.reason, metricResult: proposal.metricResult ?? null }));
     setNotice("Approved. Demo visual updated using synthetic data only.");
     setActive("Presentation");
   }
@@ -137,7 +141,7 @@ export default function App() {
             <article className="trust-card"><div className="trust-mark"><ShieldCheck size={21}/></div><span className="eyebrow">BUILT ON TRUST</span><h3>Your voice.<br/>Your data. <em>Your call.</em></h3><p>Caesar drafts. You decide. Every proposed change is reviewable before it reaches your presentation.</p><div className="trust-rule"/><div className="trust-detail"><LockKeyhole size={15}/><span><strong>Company-controlled by design</strong><small>Real data connectors are not enabled in this demo.</small></span></div><button className="text-button" onClick={() => setActive("Integrations")}>Explore data controls <ArrowUpRight size={14}/></button></article></section>
         </>}
 
-        {active === "Create" && <section className="subpage"><div className="eyebrow">CREATION STUDIO</div><h1>Give your idea <em>a shape.</em></h1><p className="subheading">Caesar drafts the next step. Review the proposal before approving anything.</p><div className="studio-card"><label htmlFor="studio-prompt">WHAT SHOULD THE AUDIENCE UNDERSTAND?</label><textarea id="studio-prompt" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Tell Caesar the story, audience, or question…" rows={4}/><div className="studio-footer"><span><LockKeyhole size={13}/> Synthetic demo only</span><button className="primary-button" onClick={()=>draftProposal()}>Draft proposal <Sparkles size={15}/></button></div></div>{proposal && <div className="proposal-card"><div className="proposal-title"><span className="status-pill">AWAITING YOUR APPROVAL</span><span className="demo-tag">SYNTHETIC DATA</span></div><h2>{proposal.title}</h2><p>{proposal.detail}</p><div className="proposal-preview"><BarChart3 size={18}/><div><strong>{proposal.chart}</strong><small>{proposal.reason}</small></div></div><div className="proposal-actions"><button className="secondary-button" onClick={()=>{setProposal(null);setApproved(false);setNotice("Proposal discarded.");}}>Discard</button><button className="primary-button" onClick={approveProposal}><Check size={15}/> Approve & preview</button></div></div>}</section>}
+        {active === "Create" && <section className="subpage"><div className="eyebrow">CREATION STUDIO</div><h1>Give your idea <em>a shape.</em></h1><p className="subheading">Caesar drafts the next step. Review the proposal before approving anything.</p><div className="studio-card"><label htmlFor="studio-prompt">WHAT SHOULD THE AUDIENCE UNDERSTAND?</label><textarea id="studio-prompt" value={query} onChange={e=>setQuery(e.target.value)} placeholder="Tell Caesar the story, audience, or question…" rows={4}/><div className="studio-footer"><span><LockKeyhole size={13}/> Synthetic demo only</span><button className="primary-button" onClick={()=>draftProposal()}>Draft proposal <Sparkles size={15}/></button></div></div>{proposal && <div className="proposal-card"><div className="proposal-title"><span className="status-pill">AWAITING YOUR APPROVAL</span><span className="demo-tag">SYNTHETIC DATA</span></div><label className="proposal-edit-label" htmlFor="proposal-title">PROPOSAL TITLE · EDITING INVALIDATES APPROVAL</label><input id="proposal-title" className="proposal-title-input" value={proposal.title} onChange={e=>{setProposal({...proposal,title:e.target.value});setApprovedProposalKey(null);}}/><p>{proposal.detail}</p><div className="proposal-preview"><BarChart3 size={18}/><div><strong>{proposal.chart}</strong><small>{proposal.reason}</small></div></div><div className="proposal-actions"><button className="secondary-button" onClick={()=>{setProposal(null);setApproved(false);setNotice("Proposal discarded.");}}>Discard</button><button className="primary-button" onClick={approveProposal}><Check size={15}/> Approve & preview</button></div></div>}</section>}
 
         {active === "Presentation" && <section className="subpage"><div className="eyebrow">PRESENTATION CANVAS</div><h1>Your story, <em>in focus.</em></h1><p className="subheading">Only approved proposals appear here. This prototype uses synthetic data, not company data.</p>{approved && proposal ? <div className="slide-preview"><div className="slide-top"><span>CAESAR / EXECUTIVE BRIEF</span><span>01 — 01</span></div><h2>{proposal.title}</h2><p className="slide-description">A clearer look at the trend behind the numbers.</p>{proposal.metricResult ? <div className="grounded-metric"><span>{proposal.metricResult.metric.replace(/_/g, " ") } · {proposal.metricResult.period}</span><strong>{formatDemoMetricValue(proposal.metricResult)}</strong><small>{proposal.metricResult.definition}</small></div> : <div className="slide-chart"><MiniChart/></div>}<div className="slide-bottom"><span>{proposal.metricResult ? `Source: ${proposal.metricResult.source} · ${proposal.metricResult.freshness}` : "Source: illustrative demo chart"}</span><span>{proposal.metricResult ? proposal.metricResult.warning : "Illustrative values · not for business decisions"}</span></div></div> : <div className="empty-state"><div className="empty-icon"><Presentation size={26}/></div><h2>No approved visuals yet</h2><p>Draft a proposal and approve it to see it on your presentation canvas.</p><button className="primary-button" onClick={()=>setActive("Create")}>Create a proposal <ArrowUpRight size={15}/></button></div>}</section>}
 
