@@ -1,8 +1,12 @@
 # Caesar
 
-**Speak. Shape. Present.**
+<p align="center">
+  <img src="docs/brand/caesar-cover.svg" alt="Caesar — Speak. Shape. Present." width="100%" />
+</p>
 
 Caesar is a privacy-first, voice-driven presentation copilot. It helps people turn natural-language requests and approved business data into polished slides, charts, and dashboards—without requiring presentation expertise or prompt-engineering skills.
+
+Its visual identity takes cues from Roman editorial design: architectural structure, classical typography, antique brass, warm stone, and a measured oxblood accent. The result is confident and recognisable without turning the product into a costume.
 
 ## Product principles
 
