@@ -15,7 +15,6 @@ const nav: { label: View; icon: typeof LayoutDashboard }[] = [
   { label: "Templates", icon: FileChartColumn }, { label: "Tutorial", icon: BookOpen },
 ];
 const sales = [42, 57, 49, 70, 62, 81, 74, 95, 86, 104, 92, 118];
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 function MiniChart({ values = sales }: { values?: number[] }) {
   const max = Math.max(...values);
